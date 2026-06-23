@@ -21,7 +21,14 @@ describe('ObjectSprite', () => {
   });
 
   it('全6種類が描画できる', () => {
-    const kinds = ['bottle', 'diaper', 'chair', 'ball', 'teddy', 'duck'] as const;
+    const kinds = [
+      'bottle',
+      'diaper',
+      'chair',
+      'ball',
+      'teddy',
+      'duck',
+    ] as const;
     kinds.forEach((kind) => {
       const { container } = render(<ObjectSprite kind={kind} size={50} />);
       expect(container.querySelector('svg')).not.toBeNull();

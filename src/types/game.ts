@@ -1,6 +1,12 @@
 // ゲーム全体で使う型定義。手書き型は最小限にし、リテラルユニオンを活用する。
 
-export type ObjectKind = 'chair' | 'ball' | 'teddy' | 'duck' | 'bottle' | 'diaper';
+export type ObjectKind =
+  | 'chair'
+  | 'ball'
+  | 'teddy'
+  | 'duck'
+  | 'bottle'
+  | 'diaper';
 
 export type ObjectCategory = 'obstacle' | 'toy' | 'item';
 
@@ -16,7 +22,13 @@ export type PlayStyle = 'sit' | 'bounce' | 'spin';
 
 export type Theme = 'room' | 'park' | 'night';
 
-export type SfxName = 'bottle' | 'diaper' | 'obstacle' | 'toy' | 'start' | 'gameover';
+export type SfxName =
+  | 'bottle'
+  | 'diaper'
+  | 'obstacle'
+  | 'toy'
+  | 'start'
+  | 'gameover';
 
 export type ObjectMeta = {
   label: string;

@@ -37,14 +37,32 @@ export const stepGame = (
   const contact = updateContact(state.contact, dt);
 
   // 横移動はフリーズ中でも継続する
-  const { babyX, targetX } = moveBaby(state.babyX, state.targetX, dt, config, input);
+  const { babyX, targetX } = moveBaby(
+    state.babyX,
+    state.targetX,
+    dt,
+    config,
+    input,
+  );
 
-  let working: GameState = { ...state, elapsed, phase, contact, babyX, targetX };
+  let working: GameState = {
+    ...state,
+    elapsed,
+    phase,
+    contact,
+    babyX,
+    targetX,
+  };
 
   if (!frozen) {
     const distancePx = working.distancePx + config.scrollSpeed * dt;
     const score = Math.floor(distancePx / PX_PER_M);
-    const stamina = nextStamina(working.stamina, working.discomfort, dt, config);
+    const stamina = nextStamina(
+      working.stamina,
+      working.discomfort,
+      dt,
+      config,
+    );
     const discomfort = nextDiscomfort(working.discomfort, dt, config);
 
     let objects = moveObjects(working.objects, dt, config);

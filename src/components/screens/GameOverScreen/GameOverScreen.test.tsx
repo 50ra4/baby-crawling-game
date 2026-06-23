@@ -31,14 +31,18 @@ describe('GameOverScreen', () => {
 
   it('「もういっかい」でonRetryが呼ばれる', () => {
     const onRetry = vi.fn();
-    const { getByText } = render(<GameOverScreen {...baseProps} onRetry={onRetry} />);
+    const { getByText } = render(
+      <GameOverScreen {...baseProps} onRetry={onRetry} />,
+    );
     fireEvent.click(getByText('もういっかい'));
     expect(onRetry).toHaveBeenCalledOnce();
   });
 
   it('「タイトル」でonTitleが呼ばれる', () => {
     const onTitle = vi.fn();
-    const { getByText } = render(<GameOverScreen {...baseProps} onTitle={onTitle} />);
+    const { getByText } = render(
+      <GameOverScreen {...baseProps} onTitle={onTitle} />,
+    );
     fireEvent.click(getByText('タイトル'));
     expect(onTitle).toHaveBeenCalledOnce();
   });

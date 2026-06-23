@@ -9,7 +9,9 @@ describe('nextStamina', () => {
 
   it('不快度がしきい値以上だと消費が drainMultiplier 倍になる', () => {
     const result = nextStamina(100, 80, 1, DEFAULT_CONFIG);
-    expect(result).toBe(100 - DEFAULT_CONFIG.drainPerSec * DEFAULT_CONFIG.drainMultiplier);
+    expect(result).toBe(
+      100 - DEFAULT_CONFIG.drainPerSec * DEFAULT_CONFIG.drainMultiplier,
+    );
   });
 
   it('不快度がしきい値未満なら等倍のまま', () => {

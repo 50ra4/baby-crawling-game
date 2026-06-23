@@ -134,8 +134,24 @@ export function Baby({
         <ellipse cx="0" cy="46" rx="33" ry="8.5" fill="rgba(0,0,0,0.10)" />
 
         {/* 後ろ脚 */}
-        <Capsule a={hipL} b={footL} width={14} color={clothShade} cap={skin} sock={cloth} end="foot" />
-        <Capsule a={hipR} b={footR} width={14} color={clothShade} cap={skin} sock={cloth} end="foot" />
+        <Capsule
+          a={hipL}
+          b={footL}
+          width={14}
+          color={clothShade}
+          cap={skin}
+          sock={cloth}
+          end="foot"
+        />
+        <Capsule
+          a={hipR}
+          b={footR}
+          width={14}
+          color={clothShade}
+          cap={skin}
+          sock={cloth}
+          end="foot"
+        />
 
         {/* ロンパースの胴体 */}
         <path
@@ -144,13 +160,37 @@ export function Baby({
           stroke={clothShade}
           strokeWidth="1.5"
         />
-        <path d="M-15 27 Q0 37 15 27 L13 34 Q0 40 -13 34 Z" fill="#fffdf8" stroke="#e9e2d4" strokeWidth="1" />
-        <path d="M0 -14 L0 19" stroke={clothShade} strokeWidth="1.2" opacity="0.45" />
+        <path
+          d="M-15 27 Q0 37 15 27 L13 34 Q0 40 -13 34 Z"
+          fill="#fffdf8"
+          stroke="#e9e2d4"
+          strokeWidth="1"
+        />
+        <path
+          d="M0 -14 L0 19"
+          stroke={clothShade}
+          strokeWidth="1.2"
+          opacity="0.45"
+        />
         <circle cx="0" cy="-1" r="1.6" fill={clothShade} opacity="0.6" />
 
         {/* 前腕 */}
-        <Capsule a={shoulderL} b={handL} width={12} color={cloth} cap={skin} end="hand" />
-        <Capsule a={shoulderR} b={handR} width={12} color={cloth} cap={skin} end="hand" />
+        <Capsule
+          a={shoulderL}
+          b={handL}
+          width={12}
+          color={cloth}
+          cap={skin}
+          end="hand"
+        />
+        <Capsule
+          a={shoulderR}
+          b={handR}
+          width={12}
+          color={cloth}
+          cap={skin}
+          end="hand"
+        />
 
         {/* 後頭部（カメラに背を向けてハイハイ） */}
         <g transform={`translate(0 ${-40 + headBob})`}>
@@ -160,8 +200,22 @@ export function Baby({
             stroke={skinShade}
             strokeWidth="1.5"
           />
-          <circle cx="-23" cy="3" r="5" fill={skin} stroke={skinShade} strokeWidth="1.2" />
-          <circle cx="23" cy="3" r="5" fill={skin} stroke={skinShade} strokeWidth="1.2" />
+          <circle
+            cx="-23"
+            cy="3"
+            r="5"
+            fill={skin}
+            stroke={skinShade}
+            strokeWidth="1.2"
+          />
+          <circle
+            cx="23"
+            cy="3"
+            r="5"
+            fill={skin}
+            stroke={skinShade}
+            strokeWidth="1.2"
+          />
           <path
             d="M-22 8 Q-24 -27 0 -30 Q24 -27 22 8 Q17 14 12 9 Q6 15 0 10 Q-6 15 -12 9 Q-17 14 -22 8 Z"
             fill={hairColor}

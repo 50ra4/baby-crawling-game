@@ -110,8 +110,24 @@ describe('checkCollisions', () => {
       elapsed: 1,
       stamina: 100,
       objects: [
-        { id: 1, kind: 'chair', x: base.babyX, y: BABY_Y, hit: false, scale: 1, vx: 0 },
-        { id: 2, kind: 'chair', x: base.babyX, y: BABY_Y, hit: false, scale: 1, vx: 0 },
+        {
+          id: 1,
+          kind: 'chair',
+          x: base.babyX,
+          y: BABY_Y,
+          hit: false,
+          scale: 1,
+          vx: 0,
+        },
+        {
+          id: 2,
+          kind: 'chair',
+          x: base.babyX,
+          y: BABY_Y,
+          hit: false,
+          scale: 1,
+          vx: 0,
+        },
       ],
     };
     const { state: next } = checkCollisions(state, DEFAULT_CONFIG);

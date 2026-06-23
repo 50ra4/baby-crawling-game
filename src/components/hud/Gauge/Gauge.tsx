@@ -12,7 +12,10 @@ export function Gauge({ icon, ratio, color, warn }: GaugeProps) {
     <div className="gauge">
       <span className="g-ic">{icon}</span>
       <div className="g-track">
-        <div className="g-fill" style={{ width: `${widthPct}%`, background: color }} />
+        <div
+          className="g-fill"
+          style={{ width: `${widthPct}%`, background: color }}
+        />
       </div>
       {warn !== undefined && <span className="g-warn">{warn}</span>}
     </div>

@@ -89,29 +89,51 @@ describe('moveBaby', () => {
 
 describe('moveObjects', () => {
   it('静的オブジェクトは scrollSpeed×dt 分だけ下降する', () => {
-    const result = moveObjects([makeObject({ kind: 'chair', y: 100 })], 0.1, DEFAULT_CONFIG);
+    const result = moveObjects(
+      [makeObject({ kind: 'chair', y: 100 })],
+      0.1,
+      DEFAULT_CONFIG,
+    );
     expect(result.at(0)?.y).toBeCloseTo(100 + DEFAULT_CONFIG.scrollSpeed * 0.1);
   });
 
   it('動的オブジェクト(ボール)は scrollSpeed×1.5 で下降する', () => {
-    const result = moveObjects([makeObject({ kind: 'ball', y: 100, vx: 0 })], 0.1, DEFAULT_CONFIG);
-    expect(result.at(0)?.y).toBeCloseTo(100 + DEFAULT_CONFIG.scrollSpeed * 1.5 * 0.1);
+    const result = moveObjects(
+      [makeObject({ kind: 'ball', y: 100, vx: 0 })],
+      0.1,
+      DEFAULT_CONFIG,
+    );
+    expect(result.at(0)?.y).toBeCloseTo(
+      100 + DEFAULT_CONFIG.scrollSpeed * 1.5 * 0.1,
+    );
   });
 
   it('動的オブジェクトは vx×dt 分だけ横移動する', () => {
-    const result = moveObjects([makeObject({ kind: 'ball', x: 180, vx: 50 })], 0.1, DEFAULT_CONFIG);
+    const result = moveObjects(
+      [makeObject({ kind: 'ball', x: 180, vx: 50 })],
+      0.1,
+      DEFAULT_CONFIG,
+    );
     expect(result.at(0)?.x).toBeCloseTo(180 + 50 * 0.1);
   });
 
   it('左壁(x<26)で反射して vx が正に反転する', () => {
-    const result = moveObjects([makeObject({ kind: 'ball', x: 28, vx: -50 })], 0.1, DEFAULT_CONFIG);
+    const result = moveObjects(
+      [makeObject({ kind: 'ball', x: 28, vx: -50 })],
+      0.1,
+      DEFAULT_CONFIG,
+    );
     const obj = result.at(0);
     expect(obj?.x).toBe(26);
     expect(obj?.vx).toBeGreaterThan(0);
   });
 
   it('右壁(x>334)で反射して vx が負に反転する', () => {
-    const result = moveObjects([makeObject({ kind: 'ball', x: 332, vx: 50 })], 0.1, DEFAULT_CONFIG);
+    const result = moveObjects(
+      [makeObject({ kind: 'ball', x: 332, vx: 50 })],
+      0.1,
+      DEFAULT_CONFIG,
+    );
     const obj = result.at(0);
     expect(obj?.x).toBe(334);
     expect(obj?.vx).toBeLessThan(0);

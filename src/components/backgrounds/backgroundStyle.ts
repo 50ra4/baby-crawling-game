@@ -31,7 +31,10 @@ const CENTER_RUNNER: Record<Theme, string> = {
   room: 'linear-gradient(90deg, transparent 0 6%, #e7b9c9 6% 9%, #f3e3cf 9% 91%, #e7b9c9 91% 94%, transparent 94%)',
 };
 
-export const backgroundStyle = (theme: Theme, scroll: number): CSSProperties => ({
+export const backgroundStyle = (
+  theme: Theme,
+  scroll: number,
+): CSSProperties => ({
   background: BACKGROUND_BUILDERS[theme](scroll),
 });
 

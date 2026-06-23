@@ -15,7 +15,8 @@ const PHRASES: number[][] = [
   [60, 62, 64, 67, 65, 64, 62, 67],
 ];
 
-const midiToFreq = (note: number): number => 440 * Math.pow(2, (note - 69) / 12);
+const midiToFreq = (note: number): number =>
+  440 * Math.pow(2, (note - 69) / 12);
 
 const resolveAudioContext = (): typeof AudioContext => {
   const fallback = window as unknown as {
@@ -48,7 +49,12 @@ export const createGameAudio = () => {
   };
 
   // 単音。短いアタックと指数減衰のエンベロープを付ける。
-  const tone = (freq: number, t0: number, dur: number, options: ToneOptions = {}) => {
+  const tone = (
+    freq: number,
+    t0: number,
+    dur: number,
+    options: ToneOptions = {},
+  ) => {
     const audioCtx = ctx!;
     const out = master!;
     const { type = 'sine', gain = 0.2, glideTo = null } = options;

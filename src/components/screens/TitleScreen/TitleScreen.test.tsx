@@ -30,24 +30,32 @@ describe('TitleScreen', () => {
     const { getByPlaceholderText } = render(
       <TitleScreen {...baseProps} onChangeName={onChangeName} />,
     );
-    fireEvent.change(getByPlaceholderText('なまえ'), { target: { value: 'はな' } });
+    fireEvent.change(getByPlaceholderText('なまえ'), {
+      target: { value: 'はな' },
+    });
     expect(onChangeName).toHaveBeenCalledWith('はな');
   });
 
   it('「はじめる」ボタンでonStartが呼ばれる', () => {
     const onStart = vi.fn();
-    const { getByText } = render(<TitleScreen {...baseProps} onStart={onStart} />);
+    const { getByText } = render(
+      <TitleScreen {...baseProps} onStart={onStart} />,
+    );
     fireEvent.click(getByText('はじめる'));
     expect(onStart).toHaveBeenCalledOnce();
   });
 
   it('ベスト記録が0より大きいとき表示する', () => {
-    const { getByText } = render(<TitleScreen {...baseProps} bestDistance={120} />);
+    const { getByText } = render(
+      <TitleScreen {...baseProps} bestDistance={120} />,
+    );
     expect(getByText('ベスト 120m')).toBeInTheDocument();
   });
 
   it('ベスト記録が0のとき表示しない', () => {
-    const { queryByText } = render(<TitleScreen {...baseProps} bestDistance={0} />);
+    const { queryByText } = render(
+      <TitleScreen {...baseProps} bestDistance={0} />,
+    );
     expect(queryByText(/ベスト/)).toBeNull();
   });
 });

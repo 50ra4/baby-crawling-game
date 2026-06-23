@@ -44,7 +44,14 @@ export function TitleScreen({
         ベビーラン
       </h1>
       <div className="t-baby">
-        <Baby phase={phase} crawlStyle={crawlStyle} bounce={bounce} skin={skin} cloth={cloth} size={132} />
+        <Baby
+          phase={phase}
+          crawlStyle={crawlStyle}
+          bounce={bounce}
+          skin={skin}
+          cloth={cloth}
+          size={132}
+        />
       </div>
       <label className="t-namelbl" htmlFor="baby-name">
         あかちゃんの なまえ
@@ -60,7 +67,9 @@ export function TitleScreen({
       <button className="t-start" onClick={onStart}>
         はじめる
       </button>
-      <div className="t-hint">← → / A D で よけてね ・ ドラッグでも うごくよ</div>
+      <div className="t-hint">
+        ← → / A D で よけてね ・ ドラッグでも うごくよ
+      </div>
       {bestDistance > 0 && <div className="t-best">ベスト {bestDistance}m</div>}
     </div>
   );

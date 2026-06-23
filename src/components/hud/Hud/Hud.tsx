@@ -26,7 +26,11 @@ export function Hud({
     <div className="hud">
       <div className="hud-top">
         <div className="gauges">
-          <Gauge icon="❤️" ratio={staminaRatio} color={staminaColor(staminaRatio)} />
+          <Gauge
+            icon="❤️"
+            ratio={staminaRatio}
+            color={staminaColor(staminaRatio)}
+          />
           <Gauge
             icon="🧷"
             ratio={discomfortRatio}

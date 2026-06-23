@@ -58,11 +58,25 @@ export const checkCollisions = (
           state.maxStamina,
           stamina + state.maxStamina * (config.bottleHealPct / 100),
         );
-        popups = addPopup(popups, popId++, '+体力', POP_COLOR.heal, object.x, object.y);
+        popups = addPopup(
+          popups,
+          popId++,
+          '+体力',
+          POP_COLOR.heal,
+          object.x,
+          object.y,
+        );
         events.push({ type: 'sfx', name: 'bottle' });
       } else {
         discomfort = 0;
-        popups = addPopup(popups, popId++, 'おむつ交換！', POP_COLOR.diaper, object.x, object.y);
+        popups = addPopup(
+          popups,
+          popId++,
+          'おむつ交換！',
+          POP_COLOR.diaper,
+          object.x,
+          object.y,
+        );
         events.push({ type: 'sfx', name: 'diaper' });
       }
       return { ...object, hit: true };
@@ -79,13 +93,27 @@ export const checkCollisions = (
       invincibleType = 'hurt';
       contact = { type: 'hurt', t: 0, dur: config.contactTime };
       shake = 1;
-      popups = addPopup(popups, popId++, 'いたっ！', POP_COLOR.hurt, object.x, object.y);
+      popups = addPopup(
+        popups,
+        popId++,
+        'いたっ！',
+        POP_COLOR.hurt,
+        object.x,
+        object.y,
+      );
       events.push({ type: 'sfx', name: 'obstacle' });
     } else {
       stamina -= config.toyDamage;
       invincibleType = 'play';
       contact = { type: 'play', t: 0, dur: config.contactTime };
-      popups = addPopup(popups, popId++, '遊んじゃった！', POP_COLOR.play, object.x, object.y);
+      popups = addPopup(
+        popups,
+        popId++,
+        '遊んじゃった！',
+        POP_COLOR.play,
+        object.x,
+        object.y,
+      );
       events.push({ type: 'sfx', name: 'toy' });
     }
     return { ...object, hit: true };

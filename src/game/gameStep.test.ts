@@ -17,17 +17,30 @@ afterEach(() => {
 
 describe('stepGame（通常時）', () => {
   it('経過時間が dt 分進む', () => {
-    const { state } = stepGame(createGameState(DEFAULT_CONFIG), 0.1, DEFAULT_CONFIG, noInput);
+    const { state } = stepGame(
+      createGameState(DEFAULT_CONFIG),
+      0.1,
+      DEFAULT_CONFIG,
+      noInput,
+    );
     expect(state.elapsed).toBeCloseTo(0.1);
   });
 
   it('距離が scrollSpeed×dt 分だけ増える', () => {
-    const { state } = stepGame(createGameState(DEFAULT_CONFIG), 0.1, DEFAULT_CONFIG, noInput);
+    const { state } = stepGame(
+      createGameState(DEFAULT_CONFIG),
+      0.1,
+      DEFAULT_CONFIG,
+      noInput,
+    );
     expect(state.distancePx).toBeCloseTo(DEFAULT_CONFIG.scrollSpeed * 0.1);
   });
 
   it('スコアは距離をPX_PER_Mで割った整数になる', () => {
-    const base = { ...createGameState(DEFAULT_CONFIG), distancePx: PX_PER_M * 5 - 1 };
+    const base = {
+      ...createGameState(DEFAULT_CONFIG),
+      distancePx: PX_PER_M * 5 - 1,
+    };
     const { state } = stepGame(base, 0.1, DEFAULT_CONFIG, noInput);
     // 距離が 190-1+20 = 209px → floor(209/38) = 5
     expect(state.score).toBe(Math.floor(state.distancePx / PX_PER_M));
@@ -35,25 +48,45 @@ describe('stepGame（通常時）', () => {
   });
 
   it('体力が時間経過で減少する', () => {
-    const { state } = stepGame(createGameState(DEFAULT_CONFIG), 0.1, DEFAULT_CONFIG, noInput);
+    const { state } = stepGame(
+      createGameState(DEFAULT_CONFIG),
+      0.1,
+      DEFAULT_CONFIG,
+      noInput,
+    );
     expect(state.stamina).toBeCloseTo(100 - DEFAULT_CONFIG.drainPerSec * 0.1);
   });
 
   it('不快度が上昇する', () => {
-    const { state } = stepGame(createGameState(DEFAULT_CONFIG), 0.1, DEFAULT_CONFIG, noInput);
+    const { state } = stepGame(
+      createGameState(DEFAULT_CONFIG),
+      0.1,
+      DEFAULT_CONFIG,
+      noInput,
+    );
     expect(state.discomfort).toBeCloseTo(DEFAULT_CONFIG.drainPerSec * 2 * 0.1);
   });
 
   it('ハイハイの位相が進む', () => {
-    const { state } = stepGame(createGameState(DEFAULT_CONFIG), 0.1, DEFAULT_CONFIG, noInput);
+    const { state } = stepGame(
+      createGameState(DEFAULT_CONFIG),
+      0.1,
+      DEFAULT_CONFIG,
+      noInput,
+    );
     expect(state.phase).toBeCloseTo(DEFAULT_CONFIG.crawlCyclesPerSec * 1 * 0.1);
   });
 
   it('右キー入力で赤ちゃんが右へ動く', () => {
-    const { state } = stepGame(createGameState(DEFAULT_CONFIG), 0.1, DEFAULT_CONFIG, {
-      ...noInput,
-      right: true,
-    });
+    const { state } = stepGame(
+      createGameState(DEFAULT_CONFIG),
+      0.1,
+      DEFAULT_CONFIG,
+      {
+        ...noInput,
+        right: true,
+      },
+    );
     expect(state.babyX).toBeGreaterThan(180);
   });
 });
@@ -97,7 +130,10 @@ describe('stepGame（接触フリーズ中）', () => {
 describe('stepGame（スポーン）', () => {
   it('spawnInterval を超えるとオブジェクトが1体生成される', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
-    const base = { ...createGameState(DEFAULT_CONFIG), spawnAcc: DEFAULT_CONFIG.spawnInterval };
+    const base = {
+      ...createGameState(DEFAULT_CONFIG),
+      spawnAcc: DEFAULT_CONFIG.spawnInterval,
+    };
     const { state } = stepGame(base, 0.05, DEFAULT_CONFIG, noInput);
     expect(state.objects).toHaveLength(1);
   });

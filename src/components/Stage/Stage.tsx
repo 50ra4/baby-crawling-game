@@ -47,7 +47,11 @@ export function Stage({
       <div
         className="stage"
         ref={stageRef}
-        style={{ width: STAGE_WIDTH, height: STAGE_HEIGHT, transform: `scale(${scale})` }}
+        style={{
+          width: STAGE_WIDTH,
+          height: STAGE_HEIGHT,
+          transform: `scale(${scale})`,
+        }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}

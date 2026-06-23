@@ -37,7 +37,12 @@ export function GameOverScreen({
       <div className="o-title">すやすや… おやすみなさい</div>
       <div className="o-name">{name || 'あかちゃん'} は ねむっちゃった</div>
       <div className="o-baby">
-        <svg width="240" height="172" viewBox="0 0 240 172" style={ZZZ_LAYER_STYLE}>
+        <svg
+          width="240"
+          height="172"
+          viewBox="0 0 240 172"
+          style={ZZZ_LAYER_STYLE}
+        >
           <Zzz t={time} x={104} y={64} />
         </svg>
         <SleepingBaby skin={skin} cloth={cloth} size={236} t={time} />

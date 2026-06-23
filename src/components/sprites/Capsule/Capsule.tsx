@@ -23,11 +23,19 @@ export function Capsule({ a, b, width, color, cap, end, sock }: CapsuleProps) {
         strokeWidth={width}
         strokeLinecap="round"
       />
-      {end === 'hand' && <circle cx={b[0]} cy={b[1]} r={width / 2 + 1.5} fill={cap} />}
+      {end === 'hand' && (
+        <circle cx={b[0]} cy={b[1]} r={width / 2 + 1.5} fill={cap} />
+      )}
       {end === 'foot' && (
         <>
           <circle cx={b[0]} cy={b[1]} r={width / 2 + 1} fill={sock} />
-          <ellipse cx={b[0]} cy={b[1] + 1} rx={width / 2} ry={width / 2 - 1.5} fill={cap} />
+          <ellipse
+            cx={b[0]}
+            cy={b[1] + 1}
+            rx={width / 2}
+            ry={width / 2 - 1.5}
+            fill={cap}
+          />
         </>
       )}
     </g>

@@ -31,7 +31,12 @@ export const OBJECT_META = {
   chair: { label: '椅子', category: 'obstacle', dynamic: false, base: 76 },
   ball: { label: 'ボール', category: 'toy', dynamic: true, base: 54 },
   teddy: { label: 'テディベア', category: 'toy', dynamic: false, base: 76 },
-  duck: { label: 'アヒルのおもちゃ', category: 'toy', dynamic: false, base: 42 },
+  duck: {
+    label: 'アヒルのおもちゃ',
+    category: 'toy',
+    dynamic: false,
+    base: 42,
+  },
 } as const satisfies Record<ObjectKind, ObjectMeta>;
 
 // カテゴリごとのkind一覧。スポーン時の抽選に使う。
