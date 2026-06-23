@@ -1,0 +1,11 @@
+{
+  "name": "baby-crawling-game",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "赤ちゃんがはいはいする距離を競うゲーム",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "50ra4",
+  "license": "ISC"
+}
