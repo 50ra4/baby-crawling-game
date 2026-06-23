@@ -7,6 +7,21 @@ const LEFT_KEYS = ['ArrowLeft', 'a', 'A'];
 const RIGHT_KEYS = ['ArrowRight', 'd', 'D'];
 const CONFIRM_KEYS = [' ', 'Enter'];
 
+// テキスト入力中（名前入力欄など）はゲーム操作キーを無視するための判定。
+// input/textarea/select やcontenteditableにフォーカスがある場合は true。
+const isTextInputTarget = (target: EventTarget | null): boolean => {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+  const tag = target.tagName;
+  return (
+    tag === 'INPUT' ||
+    tag === 'TEXTAREA' ||
+    tag === 'SELECT' ||
+    target.isContentEditable
+  );
+};
+
 type PointerInput = {
   inputRef: RefObject<InputState>;
   onPointerDown: (event: PointerEvent<HTMLDivElement>) => void;
@@ -35,6 +50,10 @@ export const useInput = (
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.repeat) {
+        return;
+      }
+      // IME変換中（Enter確定など）やテキスト入力中は、開始・移動操作を無視する。
+      if (event.isComposing || isTextInputTarget(event.target)) {
         return;
       }
       if (LEFT_KEYS.includes(event.key)) {

@@ -37,6 +37,31 @@ describe('useInput', () => {
     expect(onConfirm).toHaveBeenCalledOnce();
   });
 
+  it('テキスト入力欄にフォーカス中はSpaceで確定コールバックが呼ばれない', () => {
+    const onConfirm = vi.fn();
+    renderHook(() => useInput(stageRef, false, onConfirm));
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    act(() => {
+      input.dispatchEvent(
+        new KeyboardEvent('keydown', { key: ' ', bubbles: true }),
+      );
+    });
+    expect(onConfirm).not.toHaveBeenCalled();
+    input.remove();
+  });
+
+  it('IME変換確定中（isComposing）のEnterで確定コールバックが呼ばれない', () => {
+    const onConfirm = vi.fn();
+    renderHook(() => useInput(stageRef, false, onConfirm));
+    act(() => {
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', isComposing: true }),
+      );
+    });
+    expect(onConfirm).not.toHaveBeenCalled();
+  });
+
   it('プレイ中でないときポインタダウンしてもドラッグしない', () => {
     const { result } = renderHook(() => useInput(stageRef, false, () => {}));
     act(() => {
