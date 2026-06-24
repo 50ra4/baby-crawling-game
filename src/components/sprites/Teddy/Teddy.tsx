@@ -10,6 +10,7 @@ export function Teddy({ size = 56 }: TeddyProps) {
     <img
       src={teddyImg}
       alt=""
+      draggable={false}
       width={size}
       height={size}
       style={IMG_SPRITE_STYLE}

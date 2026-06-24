@@ -10,6 +10,7 @@ export function Diaper({ size = 52 }: DiaperProps) {
     <img
       src={diaperImg}
       alt=""
+      draggable={false}
       width={size}
       height={size}
       style={IMG_SPRITE_STYLE}

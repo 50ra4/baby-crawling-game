@@ -48,4 +48,11 @@ describe('Baby', () => {
     const { container } = render(<Baby play phase={0.5} />);
     expect(container.querySelector('img')).not.toBeNull();
   });
+
+  it('ドラッグ操作を奪わないようdraggable=falseかつpointer-events:noneになる', () => {
+    const { container } = render(<Baby />);
+    const img = container.querySelector('img');
+    expect(img?.getAttribute('draggable')).toBe('false');
+    expect(img?.style.pointerEvents).toBe('none');
+  });
 });

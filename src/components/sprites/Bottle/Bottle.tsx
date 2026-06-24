@@ -10,6 +10,7 @@ export function Bottle({ size = 52 }: BottleProps) {
     <img
       src={bottleImg}
       alt=""
+      draggable={false}
       width={size}
       height={size}
       style={IMG_SPRITE_STYLE}

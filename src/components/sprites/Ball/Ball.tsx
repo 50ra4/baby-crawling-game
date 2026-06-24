@@ -10,6 +10,7 @@ export function Ball({ size = 52 }: BallProps) {
     <img
       src={ballImg}
       alt=""
+      draggable={false}
       width={size}
       height={size}
       style={IMG_SPRITE_STYLE}

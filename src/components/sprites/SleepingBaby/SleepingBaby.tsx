@@ -18,6 +18,7 @@ export function SleepingBaby({
     <img
       src={babySleepImg}
       alt=""
+      draggable={false}
       width={size}
       height={size * 0.72}
       style={{

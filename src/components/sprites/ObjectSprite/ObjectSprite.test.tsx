@@ -26,6 +26,13 @@ describe('ObjectSprite', () => {
     expect(img?.getAttribute('height')).toBe('54');
   });
 
+  it('ドラッグ操作を奪わないようdraggable=falseかつpointer-events:noneになる', () => {
+    const { container } = render(<ObjectSprite kind="ball" size={52} />);
+    const img = container.querySelector('img');
+    expect(img?.getAttribute('draggable')).toBe('false');
+    expect(img?.style.pointerEvents).toBe('none');
+  });
+
   it('全6種類が描画できる', () => {
     const kinds = [
       'bottle',

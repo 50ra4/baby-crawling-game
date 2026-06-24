@@ -40,10 +40,11 @@ const crawlLimbs = (style: CrawlStyle, a: number, bounce: number): Limbs => {
       tilt: Math.sin(a) * 5,
     };
   }
+  // diagonal: 左右の手足を交互に出すクロスクロールを、bob と逆位相の sway/tilt で表現する
   return {
     bob: -Math.abs(Math.sin(a * 2)) * bounce,
-    sway: 0,
-    tilt: 0,
+    sway: Math.sin(a) * 4,
+    tilt: Math.sin(a) * 3,
   };
 };
 
@@ -72,11 +73,14 @@ export function Baby({
     <img
       src={src}
       alt=""
+      draggable={false}
       width={size}
       height={size * 1.18}
       style={{
         display: 'block',
         objectFit: 'contain',
+        // ドラッグ操作を Stage に通すため画像をヒットテストから除外する
+        pointerEvents: 'none',
         transform: `translate(${sway}px, ${bob}px) rotate(${tilt}deg)`,
         filter: hurt
           ? 'drop-shadow(0 0 10px rgba(255,70,70,.95)) hue-rotate(-20deg) saturate(1.5)'

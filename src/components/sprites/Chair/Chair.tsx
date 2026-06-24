@@ -10,6 +10,7 @@ export function Chair({ size = 52 }: ChairProps) {
     <img
       src={chairImg}
       alt=""
+      draggable={false}
       width={size}
       height={size}
       style={IMG_SPRITE_STYLE}

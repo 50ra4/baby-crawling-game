@@ -10,6 +10,7 @@ export function Duck({ size = 52 }: DuckProps) {
     <img
       src={duckImg}
       alt=""
+      draggable={false}
       width={size}
       height={size}
       style={IMG_SPRITE_STYLE}
