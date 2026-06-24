@@ -51,6 +51,7 @@ export function TitleScreen({
           skin={skin}
           cloth={cloth}
           size={132}
+          variant="title"
         />
       </div>
       <label className="t-namelbl" htmlFor="baby-name">
