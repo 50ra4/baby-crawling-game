@@ -38,8 +38,6 @@ type BabyProps = {
   phase?: number;
   crawlStyle?: CrawlStyle;
   bounce?: number;
-  skin?: string;
-  cloth?: string;
   mood?: number;
   hurt?: boolean;
   play?: boolean;

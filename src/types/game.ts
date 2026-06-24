@@ -103,8 +103,6 @@ export type GameConfig = {
   bounceHeight: number;
   shakeIntensity: number;
   shakeDuration: number;
-  skin: string;
-  cloth: string;
   theme: Theme;
   sfxOn: boolean;
   bgmOn: boolean;

@@ -2,8 +2,6 @@ import { IMG_SPRITE_STYLE } from '../spriteStyle';
 import babySleepImg from '../../../assets/sprites/baby-sleep.png';
 
 type SleepingBabyProps = {
-  skin?: string;
-  cloth?: string;
   size?: number;
   t?: number;
 };

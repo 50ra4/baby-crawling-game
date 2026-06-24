@@ -93,8 +93,6 @@ export function Playfield({
           phase={game.phase}
           crawlStyle={config.crawlStyle}
           bounce={config.bounceHeight}
-          skin={config.skin}
-          cloth={config.cloth}
           mood={game.discomfort / 100}
           hurt={game.contact?.type === 'hurt'}
           play={game.contact?.type === 'play'}

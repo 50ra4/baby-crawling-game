@@ -115,8 +115,6 @@ export function App() {
         {screen === 'title' && (
           <TitleScreen
             name={config.name}
-            skin={config.skin}
-            cloth={config.cloth}
             crawlStyle={config.crawlStyle}
             bounce={config.bounceHeight}
             bestDistance={bestRef.current.dist}
@@ -127,8 +125,6 @@ export function App() {
         {screen === 'over' && (
           <GameOverScreen
             name={config.name}
-            skin={config.skin}
-            cloth={config.cloth}
             resultDistance={lastResultRef.current}
             bestDistance={bestRef.current.dist}
             onRetry={start}

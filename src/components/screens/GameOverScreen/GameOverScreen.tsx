@@ -12,8 +12,6 @@ const ZZZ_LAYER_STYLE: CSSProperties = {
 
 type GameOverScreenProps = {
   name: string;
-  skin: string;
-  cloth: string;
   resultDistance: number;
   bestDistance: number;
   onRetry: () => void;
@@ -23,8 +21,6 @@ type GameOverScreenProps = {
 // ゲームオーバー画面：眠る赤ちゃん＋ZZZ＋結果＋もういっかい/タイトル
 export function GameOverScreen({
   name,
-  skin,
-  cloth,
   resultDistance,
   bestDistance,
   onRetry,
@@ -45,7 +41,7 @@ export function GameOverScreen({
         >
           <Zzz t={time} x={104} y={64} />
         </svg>
-        <SleepingBaby skin={skin} cloth={cloth} size={236} t={time} />
+        <SleepingBaby size={236} t={time} />
       </div>
       <div className="o-stats">
         <div className="o-stat">
