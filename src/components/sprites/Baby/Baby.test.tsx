@@ -49,6 +49,25 @@ describe('Baby', () => {
     expect(container.querySelector('img')).not.toBeNull();
   });
 
+  it('不快度80%以上では困り顔相当のフィルターがかかる', () => {
+    const { container } = render(<Baby mood={0.8} />);
+    const img = container.querySelector('img');
+    expect(img?.style.filter).not.toBe('none');
+    expect(img?.style.filter).toContain('hue-rotate');
+  });
+
+  it('不快度80%未満では通常時フィルターのまま', () => {
+    const { container } = render(<Baby mood={0.79} />);
+    const img = container.querySelector('img');
+    expect(img?.style.filter).toBe('none');
+  });
+
+  it('被弾は不快度より優先して赤いグローになる', () => {
+    const { container } = render(<Baby mood={1} hurt />);
+    const img = container.querySelector('img');
+    expect(img?.style.filter).toContain('drop-shadow(0 0 10px');
+  });
+
   it('ドラッグ操作を奪わないようdraggable=falseかつpointer-events:noneになる', () => {
     const { container } = render(<Baby />);
     const img = container.querySelector('img');
