@@ -8,8 +8,6 @@ const NAME_MAX_LENGTH = 8;
 
 type TitleScreenProps = {
   name: string;
-  skin: string;
-  cloth: string;
   crawlStyle: CrawlStyle;
   bounce: number;
   bestDistance: number;
@@ -20,8 +18,6 @@ type TitleScreenProps = {
 // タイトル画面：ロゴ＋ハイハイプレビュー＋名前入力＋はじめる
 export function TitleScreen({
   name,
-  skin,
-  cloth,
   crawlStyle,
   bounce,
   bestDistance,
@@ -48,9 +44,8 @@ export function TitleScreen({
           phase={phase}
           crawlStyle={crawlStyle}
           bounce={bounce}
-          skin={skin}
-          cloth={cloth}
           size={132}
+          variant="title"
         />
       </div>
       <label className="t-namelbl" htmlFor="baby-name">

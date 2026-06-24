@@ -4,8 +4,6 @@ import { TitleScreen } from './TitleScreen';
 
 const baseProps = {
   name: 'たろう',
-  skin: '#ffd9bf',
-  cloth: '#ffb3c7',
   crawlStyle: 'diagonal' as const,
   bounce: 7,
   bestDistance: 0,

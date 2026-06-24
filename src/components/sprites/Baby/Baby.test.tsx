@@ -2,27 +2,76 @@ import { render } from '@testing-library/react';
 import { Baby } from './Baby';
 
 describe('Baby', () => {
-  it('指定サイズのSVGを描画する', () => {
+  it('指定サイズのimg要素を描画する', () => {
     const { container } = render(<Baby size={120} />);
-    const svg = container.querySelector('svg');
-    expect(svg).not.toBeNull();
-    expect(svg?.getAttribute('width')).toBe('120');
+    const img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute('width')).toBe('120');
   });
 
   it('被弾中は赤いグローのフィルターがかかる', () => {
     const { container } = render(<Baby hurt />);
-    const svg = container.querySelector('svg');
-    expect(svg?.style.filter).toContain('drop-shadow');
+    const img = container.querySelector('img');
+    expect(img?.style.filter).toContain('drop-shadow');
   });
 
   it('通常時はフィルターがかからない', () => {
     const { container } = render(<Baby hurt={false} />);
-    const svg = container.querySelector('svg');
-    expect(svg?.style.filter).toBe('none');
+    const img = container.querySelector('img');
+    expect(img?.style.filter).toBe('none');
   });
 
   it('ハイハイの種類を変えても描画できる', () => {
     const { container } = render(<Baby crawlStyle="bunny" phase={0.5} />);
-    expect(container.querySelector('svg')).not.toBeNull();
+    expect(container.querySelector('img')).not.toBeNull();
+  });
+
+  it('heightがwidth×1.18になる', () => {
+    const { container } = render(<Baby size={100} />);
+    const img = container.querySelector('img');
+    expect(img?.getAttribute('height')).toBe(`${100 * 1.18}`);
+  });
+
+  it('CSS transformにtranslateとrotateが含まれる', () => {
+    const { container } = render(<Baby phase={0.25} crawlStyle="wiggle" />);
+    const img = container.querySelector('img');
+    expect(img?.style.transform).toMatch(/translate\(/);
+    expect(img?.style.transform).toMatch(/rotate\(/);
+  });
+
+  it('variant="title"でも描画できる', () => {
+    const { container } = render(<Baby variant="title" />);
+    expect(container.querySelector('img')).not.toBeNull();
+  });
+
+  it('play中もimg要素を描画する', () => {
+    const { container } = render(<Baby play phase={0.5} />);
+    expect(container.querySelector('img')).not.toBeNull();
+  });
+
+  it('不快度80%以上では困り顔相当のフィルターがかかる', () => {
+    const { container } = render(<Baby mood={0.8} />);
+    const img = container.querySelector('img');
+    expect(img?.style.filter).not.toBe('none');
+    expect(img?.style.filter).toContain('hue-rotate');
+  });
+
+  it('不快度80%未満では通常時フィルターのまま', () => {
+    const { container } = render(<Baby mood={0.79} />);
+    const img = container.querySelector('img');
+    expect(img?.style.filter).toBe('none');
+  });
+
+  it('被弾は不快度より優先して赤いグローになる', () => {
+    const { container } = render(<Baby mood={1} hurt />);
+    const img = container.querySelector('img');
+    expect(img?.style.filter).toContain('drop-shadow(0 0 10px');
+  });
+
+  it('ドラッグ操作を奪わないようdraggable=falseかつpointer-events:noneになる', () => {
+    const { container } = render(<Baby />);
+    const img = container.querySelector('img');
+    expect(img?.getAttribute('draggable')).toBe('false');
+    expect(img?.style.pointerEvents).toBe('none');
   });
 });

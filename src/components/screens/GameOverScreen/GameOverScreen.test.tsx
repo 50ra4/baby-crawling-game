@@ -4,8 +4,6 @@ import { GameOverScreen } from './GameOverScreen';
 
 const baseProps = {
   name: 'たろう',
-  skin: '#ffd9bf',
-  cloth: '#ffb3c7',
   resultDistance: 42,
   bestDistance: 99,
   onRetry: () => {},

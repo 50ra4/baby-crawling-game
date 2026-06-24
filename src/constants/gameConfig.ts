@@ -71,8 +71,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   bounceHeight: 7,
   shakeIntensity: 8,
   shakeDuration: 0.3,
-  skin: '#ffd9bf',
-  cloth: '#ffb3c7',
   theme: 'room',
   sfxOn: true,
   bgmOn: false,

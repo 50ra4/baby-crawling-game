@@ -122,9 +122,7 @@ describe('DEFAULT_CONFIG', () => {
     expect(DEFAULT_CONFIG.playStyle).toBe('bounce');
   });
 
-  it('見た目の既定値(肌・服・おへや)である', () => {
-    expect(DEFAULT_CONFIG.skin).toBe('#ffd9bf');
-    expect(DEFAULT_CONFIG.cloth).toBe('#ffb3c7');
+  it('見た目の既定値(おへや)である', () => {
     expect(DEFAULT_CONFIG.theme).toBe('room');
   });
 
