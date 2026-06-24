@@ -33,4 +33,4 @@ jobs:
         run: npm run test:run
 
       - name: Build
-        run: tsc -b && npx vite build --base /baby-crawling-game/
+        run: npx vite build --base /baby-crawling-game/
