@@ -25,4 +25,27 @@ describe('Baby', () => {
     const { container } = render(<Baby crawlStyle="bunny" phase={0.5} />);
     expect(container.querySelector('img')).not.toBeNull();
   });
+
+  it('heightがwidth×1.18になる', () => {
+    const { container } = render(<Baby size={100} />);
+    const img = container.querySelector('img');
+    expect(img?.getAttribute('height')).toBe(`${100 * 1.18}`);
+  });
+
+  it('CSS transformにtranslateとrotateが含まれる', () => {
+    const { container } = render(<Baby phase={0.25} crawlStyle="wiggle" />);
+    const img = container.querySelector('img');
+    expect(img?.style.transform).toMatch(/translate\(/);
+    expect(img?.style.transform).toMatch(/rotate\(/);
+  });
+
+  it('variant="title"でも描画できる', () => {
+    const { container } = render(<Baby variant="title" />);
+    expect(container.querySelector('img')).not.toBeNull();
+  });
+
+  it('play中もimg要素を描画する', () => {
+    const { container } = render(<Baby play phase={0.5} />);
+    expect(container.querySelector('img')).not.toBeNull();
+  });
 });

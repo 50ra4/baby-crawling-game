@@ -20,6 +20,12 @@ describe('ObjectSprite', () => {
     expect(img?.getAttribute('width')).toBe('54');
   });
 
+  it('sizeがimgのheightにも反映される', () => {
+    const { container } = render(<ObjectSprite kind="ball" size={54} />);
+    const img = container.querySelector('img');
+    expect(img?.getAttribute('height')).toBe('54');
+  });
+
   it('全6種類が描画できる', () => {
     const kinds = [
       'bottle',
