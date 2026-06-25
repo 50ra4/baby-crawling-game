@@ -71,11 +71,11 @@ export type BestRecord = {
 };
 
 // プレイヤー入力（毎フレーム参照される）
+// targetX はタップ/ドラッグで設定する移動目標（論理X座標）。キー操作時は null にクリアする。
 export type InputState = {
   left: boolean;
   right: boolean;
-  dragging: boolean;
-  targetX: number;
+  targetX: number | null;
 };
 
 // ゲームバランスの調整値。本番では定数として固定する。
@@ -112,7 +112,6 @@ export type GameConfig = {
 // 毎フレームの可変なゲーム状態
 export type GameState = {
   babyX: number;
-  targetX: number;
   stamina: number;
   maxStamina: number;
   discomfort: number;

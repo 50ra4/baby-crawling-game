@@ -9,8 +9,7 @@ import type { GameState, InputState } from '../types/game';
 const noInput: InputState = {
   left: false,
   right: false,
-  dragging: false,
-  targetX: 180,
+  targetX: null,
 };
 
 afterEach(() => {

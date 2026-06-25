@@ -5,7 +5,6 @@ describe('createGameState', () => {
   it('赤ちゃんが画面中央(180)から始まる', () => {
     const state = createGameState(DEFAULT_CONFIG);
     expect(state.babyX).toBe(180);
-    expect(state.targetX).toBe(180);
   });
 
   it('体力が初期体力で満タンになる', () => {

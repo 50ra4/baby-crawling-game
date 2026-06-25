@@ -26,7 +26,6 @@ type PointerInput = {
   inputRef: RefObject<InputState>;
   onPointerDown: (event: PointerEvent<HTMLDivElement>) => void;
   onPointerMove: (event: PointerEvent<HTMLDivElement>) => void;
-  onPointerUp: () => void;
 };
 
 // キーボード（←→/AD・Space/Enter）とポインタ（ドラッグ）入力を集約する。
@@ -39,8 +38,7 @@ export const useInput = (
   const inputRef = useRef<InputState>({
     left: false,
     right: false,
-    dragging: false,
-    targetX: STAGE_WIDTH / 2,
+    targetX: null,
   });
   const onConfirmRef = useRef(onConfirm);
   onConfirmRef.current = onConfirm;
@@ -56,10 +54,12 @@ export const useInput = (
       if (event.isComposing || isTextInputTarget(event.target)) {
         return;
       }
+      // キー操作を始めたらタップ/ドラッグの追従目標をクリアし、キー入力へ切り替える
+      // （指を離した後の意図しないタップ位置への追従ドリフトを防ぐ）。
       if (LEFT_KEYS.includes(event.key)) {
-        inputRef.current = { ...inputRef.current, left: true };
+        inputRef.current = { ...inputRef.current, left: true, targetX: null };
       } else if (RIGHT_KEYS.includes(event.key)) {
-        inputRef.current = { ...inputRef.current, right: true };
+        inputRef.current = { ...inputRef.current, right: true, targetX: null };
       } else if (CONFIRM_KEYS.includes(event.key)) {
         onConfirmRef.current();
       }
@@ -89,27 +89,29 @@ export const useInput = (
     return clamp(logical, MARGIN, STAGE_WIDTH - MARGIN);
   };
 
+  // タップ/ドラッグで移動目標を設定する。指を離しても目標は保持し、赤ちゃんは
+  // そこへ向かって移動を続ける（タップ移動）。targetX は次のタップ・ドラッグや
+  // キー操作で更新される。
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (!playingRef.current) {
       return;
     }
+    // タッチ中に指がStage外へ出ても pointermove を受け取り続けられるよう捕捉する
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     inputRef.current = {
       ...inputRef.current,
-      dragging: true,
       targetX: pointerToLogical(event.clientX),
     };
   };
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (inputRef.current.dragging) {
-      inputRef.current = {
-        ...inputRef.current,
-        targetX: pointerToLogical(event.clientX),
-      };
+    if (!playingRef.current || inputRef.current.targetX === null) {
+      return;
     }
-  };
-  const onPointerUp = () => {
-    inputRef.current = { ...inputRef.current, dragging: false };
+    inputRef.current = {
+      ...inputRef.current,
+      targetX: pointerToLogical(event.clientX),
+    };
   };
 
-  return { inputRef, onPointerDown, onPointerMove, onPointerUp };
+  return { inputRef, onPointerDown, onPointerMove };
 };

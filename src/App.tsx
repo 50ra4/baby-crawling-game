@@ -90,7 +90,7 @@ export function App() {
     saveName(name);
   }, []);
 
-  const { inputRef, onPointerDown, onPointerMove, onPointerUp } = useInput(
+  const { inputRef, onPointerDown, onPointerMove } = useInput(
     stageRef,
     screen === 'playing',
     handleConfirm,
@@ -104,7 +104,6 @@ export function App() {
         stageRef={stageRef}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
       >
         <Playfield
           game={gameRef.current}
