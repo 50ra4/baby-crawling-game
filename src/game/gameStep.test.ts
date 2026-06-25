@@ -46,18 +46,15 @@ describe('stepGame（通常時）', () => {
     expect(state.score).toBe(5);
   });
 
-  it('体力が進んだ距離に比例して減少する', () => {
+  it('体力が経過時間に比例して減少する', () => {
     const { state } = stepGame(
       createGameState(DEFAULT_CONFIG),
       0.1,
       DEFAULT_CONFIG,
       noInput,
     );
-    // 距離 = scrollSpeed×dt = 20px。消費 = staminaPerMeter × (20/38)
-    const meters = (DEFAULT_CONFIG.scrollSpeed * 0.1) / PX_PER_M;
-    expect(state.stamina).toBeCloseTo(
-      100 - DEFAULT_CONFIG.staminaPerMeter * meters,
-    );
+    // 消費 = drainPerSec × dt（不快度0なので等倍）
+    expect(state.stamina).toBeCloseTo(100 - DEFAULT_CONFIG.drainPerSec * 0.1);
   });
 
   it('不快度が上昇する', () => {
@@ -67,9 +64,7 @@ describe('stepGame（通常時）', () => {
       DEFAULT_CONFIG,
       noInput,
     );
-    expect(state.discomfort).toBeCloseTo(
-      (100 / DEFAULT_CONFIG.discomfortFillSec) * 0.1,
-    );
+    expect(state.discomfort).toBeCloseTo(DEFAULT_CONFIG.drainPerSec * 2 * 0.1);
   });
 
   it('ハイハイの位相が進む', () => {
@@ -122,7 +117,7 @@ describe('stepGame（接触フリーズ中）', () => {
     expect(state.distancePx).toBe(0);
   });
 
-  it('体力が消費されない（距離が進まないため）', () => {
+  it('体力が消費されない（フリーズ中のため）', () => {
     const { state } = stepGame(frozenState(), 0.1, DEFAULT_CONFIG, noInput);
     expect(state.stamina).toBe(100);
   });
@@ -158,9 +153,7 @@ describe('stepGame（接触フリーズ中）', () => {
 
   it('フリーズ中でも不快度は上昇する', () => {
     const { state } = stepGame(frozenState(), 0.1, DEFAULT_CONFIG, noInput);
-    expect(state.discomfort).toBeCloseTo(
-      (100 / DEFAULT_CONFIG.discomfortFillSec) * 0.1,
-    );
+    expect(state.discomfort).toBeCloseTo(DEFAULT_CONFIG.drainPerSec * 2 * 0.1);
   });
 
   it('フリーズ中でも横移動は継続する', () => {

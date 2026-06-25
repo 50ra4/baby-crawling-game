@@ -47,16 +47,15 @@ export const stepGame = (
     babyX,
   };
 
-  // 接触フリーズ中は「スコア・距離の加算」のみ停止する（SPEC準拠）。
-  // スクロール・スポーン・距離比例の体力消費はこのブロックに限定する。
+  // 接触フリーズ中は「スコア・距離の加算」を停止する（SPEC準拠）。
+  // スクロール・スポーン・時間ベースの体力消費はこのブロックに限定する。
   if (!frozen) {
-    const scrolledPx = config.scrollSpeed * dt;
-    const distancePx = working.distancePx + scrolledPx;
+    const distancePx = working.distancePx + config.scrollSpeed * dt;
     const score = Math.floor(distancePx / PX_PER_M);
     const stamina = nextStamina(
       working.stamina,
       working.discomfort,
-      scrolledPx,
+      dt,
       config,
     );
 
