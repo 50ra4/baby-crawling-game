@@ -27,12 +27,12 @@ export function Hud({
       <div className="hud-top">
         <div className="gauges">
           <Gauge
-            icon="❤️"
+            icon="体力"
             ratio={staminaRatio}
             color={staminaColor(staminaRatio)}
           />
           <Gauge
-            icon="🧷"
+            icon="おむつ"
             ratio={discomfortRatio}
             color={discomfortColor(discomfortRatio)}
             warn={discomfort >= 100 ? '！パンパン！' : undefined}
