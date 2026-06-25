@@ -70,6 +70,8 @@ export function Playfield({
             style={{
               left: object.x,
               top: object.y,
+              width: size,
+              height: size,
               opacity: object.hit ? 0 : 1,
               transform: `translate(-50%,-50%) rotate(${tilt}deg)`,
               transition: object.hit ? 'opacity .2s' : 'none',
@@ -85,6 +87,8 @@ export function Playfield({
         style={{
           left: game.babyX,
           top: BABY_Y,
+          width: BABY_WIDTH,
+          height: BABY_WIDTH * 1.18,
           opacity: blinking ? 0.35 : 1,
           transform: `translate(-50%,-58%) ${babyContactTransform(game.contact, config)}`,
         }}

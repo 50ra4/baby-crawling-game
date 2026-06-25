@@ -51,6 +51,58 @@ describe('Playfield', () => {
     expect(container.querySelector('.obj')).not.toBeNull();
   });
 
+  it('オブジェクトのコンテナに明示的な幅高さ(base×scale)が付く', () => {
+    const game = playingState({
+      objects: [
+        { id: 1, kind: 'chair', x: 100, y: 100, hit: false, scale: 1, vx: 0 },
+      ],
+    });
+    const { container } = render(
+      <Playfield
+        game={game}
+        config={DEFAULT_CONFIG}
+        screen="playing"
+        bestDistance={0}
+      />,
+    );
+    const obj = container.querySelector<HTMLElement>('.obj');
+    // chair base=76, scale=1
+    expect(obj?.style.width).toBe('76px');
+    expect(obj?.style.height).toBe('76px');
+  });
+
+  it('画面右端寄り(left大)でもオブジェクトの幅は縮まずsizeを保つ', () => {
+    const game = playingState({
+      objects: [
+        { id: 1, kind: 'ball', x: 312, y: 100, hit: false, scale: 1, vx: 0 },
+      ],
+    });
+    const { container } = render(
+      <Playfield
+        game={game}
+        config={DEFAULT_CONFIG}
+        screen="playing"
+        bestDistance={0}
+      />,
+    );
+    const obj = container.querySelector<HTMLElement>('.obj');
+    // ball base=54。利用可能幅(360-312=48)に依存せずsize=54を保つ
+    expect(obj?.style.width).toBe('54px');
+  });
+
+  it('赤ちゃんのコンテナに明示的な幅が付く', () => {
+    const { container } = render(
+      <Playfield
+        game={playingState()}
+        config={DEFAULT_CONFIG}
+        screen="playing"
+        bestDistance={0}
+      />,
+    );
+    const baby = container.querySelector<HTMLElement>('.baby');
+    expect(baby?.style.width).toBe('96px');
+  });
+
   it('接触中は頭上バーストを表示する', () => {
     const game = playingState({ contact: { type: 'hurt', t: 0, dur: 0.6 } });
     const { getByText } = render(
