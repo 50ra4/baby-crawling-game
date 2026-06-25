@@ -49,7 +49,7 @@ describe('ゲーム全体の通しプレイ', () => {
 
   it('不快度はしきい値を超えて上昇し100%で頭打ちになる', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
-    // 30秒時点では不快度は100%に張り付いている（4/秒で上昇し25秒で到達）
+    // 不快度は discomfortFillSec(30秒) で 0→100 に到達する。30秒(1800フレーム)で満タン。
     const state = simulate(1800);
     expect(state.discomfort).toBe(100);
   });

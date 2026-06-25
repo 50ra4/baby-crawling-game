@@ -88,7 +88,8 @@ export type GameConfig = {
   itemRate: number;
   bottleShare: number;
   staminaStart: number;
-  drainPerSec: number;
+  staminaPerMeter: number;
+  discomfortFillSec: number;
   obstacleDamage: number;
   toyDamage: number;
   bottleHealPct: number;
