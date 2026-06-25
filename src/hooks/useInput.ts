@@ -26,6 +26,7 @@ type PointerInput = {
   inputRef: RefObject<InputState>;
   onPointerDown: (event: PointerEvent<HTMLDivElement>) => void;
   onPointerMove: (event: PointerEvent<HTMLDivElement>) => void;
+  onPointerUp: (event: PointerEvent<HTMLDivElement>) => void;
 };
 
 // キーボード（←→/AD・Space/Enter）とポインタ（ドラッグ）入力を集約する。
@@ -44,6 +45,18 @@ export const useInput = (
   onConfirmRef.current = onConfirm;
   const playingRef = useRef(playing);
   playingRef.current = playing;
+  // ポインタ押下中（ドラッグ中）かどうか。これが true の間だけ移動目標を更新し、
+  // ボタン未押下のホバー移動では目標を書き換えない。
+  const draggingRef = useRef(false);
+
+  // 新しいプレイ開始時に前回ドラッグの残存目標をクリアし、開始直後に古い位置へ
+  // 滑り出すのを防ぐ（外部状態 playing との同期）。
+  useEffect(() => {
+    if (playing) {
+      draggingRef.current = false;
+      inputRef.current = { ...inputRef.current, targetX: null };
+    }
+  }, [playing]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -96,6 +109,7 @@ export const useInput = (
     if (!playingRef.current) {
       return;
     }
+    draggingRef.current = true;
     // タッチ中に指がStage外へ出ても pointermove を受け取り続けられるよう捕捉する
     event.currentTarget.setPointerCapture?.(event.pointerId);
     inputRef.current = {
@@ -103,8 +117,10 @@ export const useInput = (
       targetX: pointerToLogical(event.clientX),
     };
   };
+  // 押下中（ドラッグ中）のみ目標を更新する。ボタン未押下のホバー移動では追従しない
+  // （マウスで一度クリックした後にカーソルへ追従してしまうのを防ぐ）。
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (!playingRef.current || inputRef.current.targetX === null) {
+    if (!playingRef.current || !draggingRef.current) {
       return;
     }
     inputRef.current = {
@@ -112,6 +128,13 @@ export const useInput = (
       targetX: pointerToLogical(event.clientX),
     };
   };
+  // ドラッグ終了。タップ移動のため targetX は保持し、以後の追従だけを止める。
+  const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    draggingRef.current = false;
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
 
-  return { inputRef, onPointerDown, onPointerMove };
+  return { inputRef, onPointerDown, onPointerMove, onPointerUp };
 };

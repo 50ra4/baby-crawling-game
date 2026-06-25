@@ -13,6 +13,7 @@ type StageProps = {
   stageRef: RefObject<HTMLDivElement | null>;
   onPointerDown?: (event: PointerEvent<HTMLDivElement>) => void;
   onPointerMove?: (event: PointerEvent<HTMLDivElement>) => void;
+  onPointerUp?: (event: PointerEvent<HTMLDivElement>) => void;
 };
 
 // 論理キャンバス(360×680)をビューポートに合わせて等比スケールし中央寄せする
@@ -21,6 +22,7 @@ export function Stage({
   stageRef,
   onPointerDown,
   onPointerMove,
+  onPointerUp,
 }: StageProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -52,6 +54,9 @@ export function Stage({
         }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        onPointerLeave={onPointerUp}
       >
         {children}
       </div>
