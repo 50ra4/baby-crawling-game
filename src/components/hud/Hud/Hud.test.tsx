@@ -21,6 +21,12 @@ describe('Hud', () => {
     expect(getByText('BEST 99m')).toBeInTheDocument();
   });
 
+  it('ゲージのアイコンに「体力」「おむつ」の文字ラベルを表示する', () => {
+    const { getByText } = render(<Hud {...baseProps} />);
+    expect(getByText('体力')).toBeInTheDocument();
+    expect(getByText('おむつ')).toBeInTheDocument();
+  });
+
   it('名前を表示する', () => {
     const { getByText } = render(<Hud {...baseProps} />);
     expect(getByText('たろう')).toBeInTheDocument();

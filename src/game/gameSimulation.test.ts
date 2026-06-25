@@ -7,8 +7,7 @@ import type { GameState, InputState } from '../types/game';
 const noInput: InputState = {
   left: false,
   right: false,
-  dragging: false,
-  targetX: 180,
+  targetX: null,
 };
 
 const FRAME_DT = 1 / 60;
@@ -50,7 +49,8 @@ describe('ゲーム全体の通しプレイ', () => {
 
   it('不快度はしきい値を超えて上昇し100%で頭打ちになる', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
-    // 30秒時点では不快度は100%に張り付いている（4/秒で上昇し25秒で到達）
+    // 不快度は体力消費の2倍速(drainPerSec×2=4/s)で上昇し、約25秒(1500フレーム)で
+    // 100に到達する。余裕を見て30秒(1800フレーム)シミュレートする。
     const state = simulate(1800);
     expect(state.discomfort).toBe(100);
   });

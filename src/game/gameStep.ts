@@ -37,13 +37,7 @@ export const stepGame = (
   const contact = updateContact(state.contact, dt);
 
   // 横移動はフリーズ中でも継続する
-  const { babyX, targetX } = moveBaby(
-    state.babyX,
-    state.targetX,
-    dt,
-    config,
-    input,
-  );
+  const babyX = moveBaby(state.babyX, dt, config, input);
 
   let working: GameState = {
     ...state,
@@ -51,9 +45,10 @@ export const stepGame = (
     phase,
     contact,
     babyX,
-    targetX,
   };
 
+  // 接触フリーズ中は「スコア・距離の加算」を停止する（SPEC準拠）。
+  // スクロール・スポーン・時間ベースの体力消費はこのブロックに限定する。
   if (!frozen) {
     const distancePx = working.distancePx + config.scrollSpeed * dt;
     const score = Math.floor(distancePx / PX_PER_M);
@@ -63,7 +58,6 @@ export const stepGame = (
       dt,
       config,
     );
-    const discomfort = nextDiscomfort(working.discomfort, dt, config);
 
     let objects = moveObjects(working.objects, dt, config);
 
@@ -80,16 +74,22 @@ export const stepGame = (
       distancePx,
       score,
       stamina,
-      discomfort,
       objects,
       spawnAcc,
       nextId,
     };
-
-    const collision = checkCollisions(working, config);
-    working = collision.state;
-    events.push(...collision.events);
   }
+
+  // 不快度の上昇とアイテム取得・被弾判定はフリーズ中でも行い、即時に反映する。
+  // （哺乳瓶・オムツを取った瞬間にゲージへ反映させる）
+  working = {
+    ...working,
+    discomfort: nextDiscomfort(working.discomfort, dt, config),
+  };
+
+  const collision = checkCollisions(working, config);
+  working = collision.state;
+  events.push(...collision.events);
 
   const shake = nextShake(working.shake, dt, config.shakeDuration);
   const popups = updatePopups(working.popups, dt);

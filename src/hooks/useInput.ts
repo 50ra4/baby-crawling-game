@@ -26,7 +26,7 @@ type PointerInput = {
   inputRef: RefObject<InputState>;
   onPointerDown: (event: PointerEvent<HTMLDivElement>) => void;
   onPointerMove: (event: PointerEvent<HTMLDivElement>) => void;
-  onPointerUp: () => void;
+  onPointerUp: (event: PointerEvent<HTMLDivElement>) => void;
 };
 
 // キーボード（←→/AD・Space/Enter）とポインタ（ドラッグ）入力を集約する。
@@ -39,13 +39,24 @@ export const useInput = (
   const inputRef = useRef<InputState>({
     left: false,
     right: false,
-    dragging: false,
-    targetX: STAGE_WIDTH / 2,
+    targetX: null,
   });
   const onConfirmRef = useRef(onConfirm);
   onConfirmRef.current = onConfirm;
   const playingRef = useRef(playing);
   playingRef.current = playing;
+  // ポインタ押下中（ドラッグ中）かどうか。これが true の間だけ移動目標を更新し、
+  // ボタン未押下のホバー移動では目標を書き換えない。
+  const draggingRef = useRef(false);
+
+  // 新しいプレイ開始時に前回ドラッグの残存目標をクリアし、開始直後に古い位置へ
+  // 滑り出すのを防ぐ（外部状態 playing との同期）。
+  useEffect(() => {
+    if (playing) {
+      draggingRef.current = false;
+      inputRef.current = { ...inputRef.current, targetX: null };
+    }
+  }, [playing]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -56,10 +67,12 @@ export const useInput = (
       if (event.isComposing || isTextInputTarget(event.target)) {
         return;
       }
+      // キー操作を始めたらタップ/ドラッグの追従目標をクリアし、キー入力へ切り替える
+      // （指を離した後の意図しないタップ位置への追従ドリフトを防ぐ）。
       if (LEFT_KEYS.includes(event.key)) {
-        inputRef.current = { ...inputRef.current, left: true };
+        inputRef.current = { ...inputRef.current, left: true, targetX: null };
       } else if (RIGHT_KEYS.includes(event.key)) {
-        inputRef.current = { ...inputRef.current, right: true };
+        inputRef.current = { ...inputRef.current, right: true, targetX: null };
       } else if (CONFIRM_KEYS.includes(event.key)) {
         onConfirmRef.current();
       }
@@ -89,26 +102,38 @@ export const useInput = (
     return clamp(logical, MARGIN, STAGE_WIDTH - MARGIN);
   };
 
+  // タップ/ドラッグで移動目標を設定する。指を離しても目標は保持し、赤ちゃんは
+  // そこへ向かって移動を続ける（タップ移動）。targetX は次のタップ・ドラッグや
+  // キー操作で更新される。
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (!playingRef.current) {
       return;
     }
+    draggingRef.current = true;
+    // タッチ中に指がStage外へ出ても pointermove を受け取り続けられるよう捕捉する
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     inputRef.current = {
       ...inputRef.current,
-      dragging: true,
       targetX: pointerToLogical(event.clientX),
     };
   };
+  // 押下中（ドラッグ中）のみ目標を更新する。ボタン未押下のホバー移動では追従しない
+  // （マウスで一度クリックした後にカーソルへ追従してしまうのを防ぐ）。
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (inputRef.current.dragging) {
-      inputRef.current = {
-        ...inputRef.current,
-        targetX: pointerToLogical(event.clientX),
-      };
+    if (!playingRef.current || !draggingRef.current) {
+      return;
     }
+    inputRef.current = {
+      ...inputRef.current,
+      targetX: pointerToLogical(event.clientX),
+    };
   };
-  const onPointerUp = () => {
-    inputRef.current = { ...inputRef.current, dragging: false };
+  // ドラッグ終了。タップ移動のため targetX は保持し、以後の追従だけを止める。
+  const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    draggingRef.current = false;
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
   };
 
   return { inputRef, onPointerDown, onPointerMove, onPointerUp };

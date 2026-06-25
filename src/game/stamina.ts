@@ -1,7 +1,7 @@
 import type { GameConfig } from '../types/game';
 
-// 体力の次フレーム値。不快度がしきい値以上のとき消費が drainMultiplier 倍になる。
-// 倍率は更新前の不快度で判定する。
+// 体力の次フレーム値。SPEC準拠で「経過時間(秒)」に比例して消費する。
+// 不快度がしきい値以上のとき消費が drainMultiplier 倍になる（更新前の不快度で判定）。
 export const nextStamina = (
   stamina: number,
   discomfort: number,

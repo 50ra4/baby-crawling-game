@@ -1,14 +1,13 @@
 import { afterEach, vi } from 'vitest';
 import { stepGame } from './gameStep';
 import { createGameState } from './createGameState';
-import { DEFAULT_CONFIG, PX_PER_M } from '../constants/gameConfig';
-import type { InputState } from '../types/game';
+import { BABY_Y, DEFAULT_CONFIG, PX_PER_M } from '../constants/gameConfig';
+import type { GameObject, InputState } from '../types/game';
 
 const noInput: InputState = {
   left: false,
   right: false,
-  dragging: false,
-  targetX: 180,
+  targetX: null,
 };
 
 afterEach(() => {
@@ -47,13 +46,14 @@ describe('stepGame（通常時）', () => {
     expect(state.score).toBe(5);
   });
 
-  it('体力が時間経過で減少する', () => {
+  it('体力が経過時間に比例して減少する', () => {
     const { state } = stepGame(
       createGameState(DEFAULT_CONFIG),
       0.1,
       DEFAULT_CONFIG,
       noInput,
     );
+    // 消費 = drainPerSec × dt（不快度0なので等倍）
     expect(state.stamina).toBeCloseTo(100 - DEFAULT_CONFIG.drainPerSec * 0.1);
   });
 
@@ -97,12 +97,27 @@ describe('stepGame（接触フリーズ中）', () => {
     contact: { type: 'hurt' as const, t: 0, dur: 0.6 },
   });
 
+  // 赤ちゃん(babyX, BABY_Y)に重なるオブジェクトを1体置く
+  const objOnBaby = (overrides: Partial<GameObject>): GameObject => {
+    const base = createGameState(DEFAULT_CONFIG);
+    return {
+      id: 1,
+      kind: 'bottle',
+      x: base.babyX,
+      y: BABY_Y,
+      hit: false,
+      scale: 1,
+      vx: 0,
+      ...overrides,
+    };
+  };
+
   it('距離が加算されない', () => {
     const { state } = stepGame(frozenState(), 0.1, DEFAULT_CONFIG, noInput);
     expect(state.distancePx).toBe(0);
   });
 
-  it('体力が消費されない', () => {
+  it('体力が消費されない（フリーズ中のため）', () => {
     const { state } = stepGame(frozenState(), 0.1, DEFAULT_CONFIG, noInput);
     expect(state.stamina).toBe(100);
   });
@@ -111,6 +126,34 @@ describe('stepGame（接触フリーズ中）', () => {
     const base = { ...frozenState(), spawnAcc: 10 };
     const { state } = stepGame(base, 0.1, DEFAULT_CONFIG, noInput);
     expect(state.objects).toHaveLength(0);
+  });
+
+  it('フリーズ中でも哺乳瓶に重なれば即時に体力が回復しヒット済みになる', () => {
+    const base = {
+      ...frozenState(),
+      stamina: 50,
+      objects: [objOnBaby({ kind: 'bottle' })],
+    };
+    const { state } = stepGame(base, 0.1, DEFAULT_CONFIG, noInput);
+    expect(state.stamina).toBe(
+      50 + 100 * (DEFAULT_CONFIG.bottleHealPct / 100),
+    );
+    expect(state.objects.at(0)?.hit).toBe(true);
+  });
+
+  it('フリーズ中でもオムツに重なれば即時に不快度が0へリセットされる', () => {
+    const base = {
+      ...frozenState(),
+      discomfort: 90,
+      objects: [objOnBaby({ kind: 'diaper' })],
+    };
+    const { state } = stepGame(base, 0.1, DEFAULT_CONFIG, noInput);
+    expect(state.discomfort).toBe(0);
+  });
+
+  it('フリーズ中でも不快度は上昇する', () => {
+    const { state } = stepGame(frozenState(), 0.1, DEFAULT_CONFIG, noInput);
+    expect(state.discomfort).toBeCloseTo(DEFAULT_CONFIG.drainPerSec * 2 * 0.1);
   });
 
   it('フリーズ中でも横移動は継続する', () => {

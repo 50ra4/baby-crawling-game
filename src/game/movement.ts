@@ -12,33 +12,32 @@ const WALL = 26;
 // 画面外として除去する下端の閾値
 const DESPAWN_Y = STAGE_HEIGHT + 80;
 
-type BabyPosition = { babyX: number; targetX: number };
-
-// 赤ちゃんの横移動を計算する。キー入力優先、なければドラッグ追従。
+// 赤ちゃんの横移動を計算し、新しい babyX を返す。
+// キー入力を最優先し、無ければタップ/ドラッグの目標(input.targetX)へ追従する。
 export const moveBaby = (
   babyX: number,
-  targetX: number,
   dt: number,
   config: GameConfig,
   input: InputState,
-): BabyPosition => {
+): number => {
   if (input.left || input.right) {
     const dir = (input.right ? 1 : 0) - (input.left ? 1 : 0);
-    const moved = clamp(
+    return clamp(
       babyX + dir * config.babyMoveSpeed * dt,
       MARGIN,
       STAGE_WIDTH - MARGIN,
     );
-    return { babyX: moved, targetX: moved };
   }
 
-  if (input.dragging) {
+  // タップ/ドラッグで設定された目標へ、1フレーム最大 babyMoveSpeed×dt で追従する。
+  // 指を離した後も目標が残る限り移動を続ける（タップ移動）。
+  if (input.targetX !== null) {
     const maxStep = config.babyMoveSpeed * dt;
-    const delta = clamp(targetX - babyX, -maxStep, maxStep);
-    return { babyX: babyX + delta, targetX };
+    const delta = clamp(input.targetX - babyX, -maxStep, maxStep);
+    return babyX + delta;
   }
 
-  return { babyX, targetX };
+  return babyX;
 };
 
 // 全オブジェクトを移動させ、画面外に出たものを除去する。

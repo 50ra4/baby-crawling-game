@@ -19,9 +19,14 @@ describe('nextStamina', () => {
     expect(result).toBe(100 - DEFAULT_CONFIG.drainPerSec);
   });
 
-  it('dtに比例して消費する', () => {
+  it('dtに比例して消費する（半分のdtなら消費も半分）', () => {
     const result = nextStamina(100, 0, 0.5, DEFAULT_CONFIG);
     expect(result).toBe(100 - DEFAULT_CONFIG.drainPerSec * 0.5);
+  });
+
+  it('dtが0なら消費しない', () => {
+    const result = nextStamina(100, 0, 0, DEFAULT_CONFIG);
+    expect(result).toBe(100);
   });
 });
 
