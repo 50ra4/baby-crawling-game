@@ -47,17 +47,10 @@ export const stepGame = (
     babyX,
   };
 
-  // 接触フリーズ中は「スコア・距離の加算」を停止する（SPEC準拠）。
-  // スクロール・スポーン・時間ベースの体力消費はこのブロックに限定する。
+  // 接触フリーズ中は「スコア・距離の加算」とスクロール・スポーンを停止する（SPEC準拠）。
   if (!frozen) {
     const distancePx = working.distancePx + config.scrollSpeed * dt;
     const score = Math.floor(distancePx / PX_PER_M);
-    const stamina = nextStamina(
-      working.stamina,
-      working.discomfort,
-      dt,
-      config,
-    );
 
     let objects = moveObjects(working.objects, dt, config);
 
@@ -73,17 +66,18 @@ export const stepGame = (
       ...working,
       distancePx,
       score,
-      stamina,
       objects,
       spawnAcc,
       nextId,
     };
   }
 
-  // 不快度の上昇とアイテム取得・被弾判定はフリーズ中でも行い、即時に反映する。
-  // （哺乳瓶・オムツを取った瞬間にゲージへ反映させる）
+  // 体力消費・不快度上昇は時間ベースのため、フリーズ中でも継続して両ゲージへ反映する。
+  // アイテム取得・被弾判定もフリーズ中に行い、即時にゲージへ反映させる。
+  // （体力の消費倍率は更新前の不快度で判定するため、discomfort より先に評価する）
   working = {
     ...working,
+    stamina: nextStamina(working.stamina, working.discomfort, dt, config),
     discomfort: nextDiscomfort(working.discomfort, dt, config),
   };
 
