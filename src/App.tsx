@@ -132,7 +132,6 @@ export function App() {
             name={config.name}
             gender={config.gender}
             crawlStyle={config.crawlStyle}
-            bounce={config.bounceHeight}
             bestDistance={bestRef.current.dist}
             onChangeName={handleChangeName}
             onChangeGender={handleChangeGender}

@@ -6,7 +6,6 @@ const baseProps = {
   name: 'たろう',
   gender: 'girl' as const,
   crawlStyle: 'diagonal' as const,
-  bounce: 7,
   bestDistance: 0,
   onChangeName: () => {},
   onChangeGender: () => {},

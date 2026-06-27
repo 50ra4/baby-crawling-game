@@ -5,14 +5,15 @@ import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { useRafTime } from '../../../hooks/useRafTime';
 import { useDisclosure } from '../../../hooks/useDisclosure';
 
-const PREVIEW_CRAWL_SPEED = 1.6;
+// 目がチカチカしないよう、プレビューはゆっくり浅く揺らす（速度・振幅とも大幅に抑える）
+const PREVIEW_CRAWL_SPEED = 0.35;
+const PREVIEW_BOUNCE = 2;
 const NAME_MAX_LENGTH = 8;
 
 type TitleScreenProps = {
   name: string;
   gender: Gender;
   crawlStyle: CrawlStyle;
-  bounce: number;
   bestDistance: number;
   onChangeName: (name: string) => void;
   onChangeGender: (gender: Gender) => void;
@@ -24,7 +25,6 @@ export function TitleScreen({
   name,
   gender,
   crawlStyle,
-  bounce,
   bestDistance,
   onChangeName,
   onChangeGender,
@@ -56,7 +56,7 @@ export function TitleScreen({
         <Baby
           phase={phase}
           crawlStyle={crawlStyle}
-          bounce={bounce}
+          bounce={PREVIEW_BOUNCE}
           size={132}
           variant="title"
         />
