@@ -75,4 +75,5 @@ export const DEFAULT_CONFIG: GameConfig = {
   sfxOn: true,
   bgmOn: false,
   name: '',
+  gender: 'girl',
 };

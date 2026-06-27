@@ -1,5 +1,12 @@
 import { afterEach, beforeEach } from 'vitest';
-import { loadBest, loadName, saveBest, saveName } from './storage';
+import {
+  loadBest,
+  loadGender,
+  loadName,
+  saveBest,
+  saveGender,
+  saveName,
+} from './storage';
 
 beforeEach(() => {
   localStorage.clear();
@@ -33,5 +40,21 @@ describe('loadName / saveName', () => {
 
   it('未保存なら空文字を返す', () => {
     expect(loadName()).toBe('');
+  });
+});
+
+describe('loadGender / saveGender', () => {
+  it('保存した性別を読み出せる', () => {
+    saveGender('boy');
+    expect(loadGender()).toBe('boy');
+  });
+
+  it('未保存なら既定の女の子(girl)を返す', () => {
+    expect(loadGender()).toBe('girl');
+  });
+
+  it('不正な値が保存されていても既定の女の子(girl)を返す', () => {
+    localStorage.setItem('baby_crawl_gender', 'unknown');
+    expect(loadGender()).toBe('girl');
   });
 });

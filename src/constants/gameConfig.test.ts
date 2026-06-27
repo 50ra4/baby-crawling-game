@@ -130,4 +130,8 @@ describe('DEFAULT_CONFIG', () => {
     expect(DEFAULT_CONFIG.sfxOn).toBe(true);
     expect(DEFAULT_CONFIG.bgmOn).toBe(false);
   });
+
+  it('性別の既定は女の子(girl)である', () => {
+    expect(DEFAULT_CONFIG.gender).toBe('girl');
+  });
 });

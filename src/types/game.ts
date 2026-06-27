@@ -22,6 +22,9 @@ export type PlayStyle = 'sit' | 'bounce' | 'spin';
 
 export type Theme = 'room' | 'park' | 'night';
 
+// 赤ちゃんの性別。表示名の敬称（くん/ちゃん）に対応する。
+export type Gender = 'boy' | 'girl';
+
 export type SfxName =
   | 'bottle'
   | 'diaper'
@@ -107,6 +110,7 @@ export type GameConfig = {
   sfxOn: boolean;
   bgmOn: boolean;
   name: string;
+  gender: Gender;
 };
 
 // 毎フレームの可変なゲーム状態

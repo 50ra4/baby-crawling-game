@@ -95,11 +95,9 @@ export function Baby({
     tilt = 0;
   }
 
-  // 不快度80%以上は困り顔＋汗の表情へ切替（静止画ではフィルタと小刻みな震えで表現）
+  // 不快度80%以上は困り顔＋汗の表情へ切替（目がチカチカするため小刻みな震えは入れず、
+  // 表情フィルタ＝WORRIED_FILTER のみで表現する）
   const worried = !play && mood >= WORRIED_MOOD;
-  if (worried) {
-    sway += Math.sin(a * 14) * 1.5;
-  }
 
   return (
     <img

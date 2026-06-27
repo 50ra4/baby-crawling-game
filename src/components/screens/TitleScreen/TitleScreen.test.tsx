@@ -4,10 +4,11 @@ import { TitleScreen } from './TitleScreen';
 
 const baseProps = {
   name: 'たろう',
+  gender: 'girl' as const,
   crawlStyle: 'diagonal' as const,
-  bounce: 7,
   bestDistance: 0,
   onChangeName: () => {},
+  onChangeGender: () => {},
   onStart: () => {},
 };
 
@@ -55,5 +56,67 @@ describe('TitleScreen', () => {
       <TitleScreen {...baseProps} bestDistance={0} />,
     );
     expect(queryByText(/ベスト/)).toBeNull();
+  });
+
+  it('「男の子」を押すとonChangeGenderにboyが渡る', () => {
+    const onChangeGender = vi.fn();
+    const { getByText } = render(
+      <TitleScreen {...baseProps} onChangeGender={onChangeGender} />,
+    );
+    fireEvent.click(getByText('男の子'));
+    expect(onChangeGender).toHaveBeenCalledWith('boy');
+  });
+
+  it('「女の子」を押すとonChangeGenderにgirlが渡る', () => {
+    const onChangeGender = vi.fn();
+    const { getByText } = render(
+      <TitleScreen {...baseProps} onChangeGender={onChangeGender} />,
+    );
+    fireEvent.click(getByText('女の子'));
+    expect(onChangeGender).toHaveBeenCalledWith('girl');
+  });
+
+  it('選択中の性別ボタンがactiveになる', () => {
+    const { getByText } = render(<TitleScreen {...baseProps} gender="boy" />);
+    expect(getByText('男の子').className).toContain('active');
+    expect(getByText('女の子').className).not.toContain('active');
+  });
+
+  it('「あそびかたを みる」でダイアログが開く', () => {
+    const { getByText, queryByText } = render(<TitleScreen {...baseProps} />);
+    expect(queryByText('そうさ')).toBeNull();
+    fireEvent.click(getByText('あそびかたを みる'));
+    expect(getByText('そうさ')).toBeInTheDocument();
+  });
+
+  it('ダイアログの「とじる」で閉じる', () => {
+    const { getByText, queryByText } = render(<TitleScreen {...baseProps} />);
+    fireEvent.click(getByText('あそびかたを みる'));
+    fireEvent.click(getByText('とじる'));
+    expect(queryByText('そうさ')).toBeNull();
+  });
+
+  it('ダイアログ表示中は背景(.overlay.title)がinertになり、閉じると解除される', () => {
+    const { getByText, container } = render(<TitleScreen {...baseProps} />);
+    const overlay = container.querySelector('.overlay.title') as HTMLElement;
+    expect(overlay.hasAttribute('inert')).toBe(false);
+    fireEvent.click(getByText('あそびかたを みる'));
+    expect(overlay.hasAttribute('inert')).toBe(true);
+    fireEvent.click(getByText('とじる'));
+    expect(overlay.hasAttribute('inert')).toBe(false);
+  });
+
+  it('Escキーでダイアログが閉じる', () => {
+    const { getByText, queryByText } = render(<TitleScreen {...baseProps} />);
+    fireEvent.click(getByText('あそびかたを みる'));
+    expect(getByText('そうさ')).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(queryByText('そうさ')).toBeNull();
+  });
+
+  it('ダイアログを開くとフォーカスが「とじる」へ移る', () => {
+    const { getByText } = render(<TitleScreen {...baseProps} />);
+    fireEvent.click(getByText('あそびかたを みる'));
+    expect(document.activeElement).toBe(getByText('とじる'));
   });
 });

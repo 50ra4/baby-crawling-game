@@ -6,6 +6,7 @@ import {
   PX_PER_M,
 } from '../../constants/gameConfig';
 import { clamp } from '../../utils/math';
+import { displayName as resolveName } from '../../utils/displayName';
 import {
   backgroundStyle,
   centerRunnerStyle,
@@ -119,7 +120,7 @@ export function Playfield({
           discomfort={game.discomfort}
           distance={distance}
           bestDistance={bestDistance}
-          name={config.name}
+          displayName={resolveName(config.name, config.gender)}
         />
       )}
     </div>

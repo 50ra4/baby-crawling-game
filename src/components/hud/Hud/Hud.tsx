@@ -8,7 +8,7 @@ type HudProps = {
   discomfort: number;
   distance: number;
   bestDistance: number;
-  name: string;
+  displayName: string;
 };
 
 // プレイ中の上部HUD（体力・不快度ゲージ＋距離＋ベスト＋名前）
@@ -18,7 +18,7 @@ export function Hud({
   discomfort,
   distance,
   bestDistance,
-  name,
+  displayName,
 }: HudProps) {
   const staminaRatio = clamp(stamina / maxStamina, 0, 1);
   const discomfortRatio = discomfort / 100;
@@ -46,7 +46,7 @@ export function Hud({
           <div className="sc-best">BEST {bestDistance}m</div>
         </div>
       </div>
-      <div className="hud-name">{name || 'あかちゃん'}</div>
+      <div className="hud-name">{displayName}</div>
     </div>
   );
 }

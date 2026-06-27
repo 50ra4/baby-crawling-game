@@ -4,10 +4,19 @@ import type {
   GameEvent,
   GameScreen,
   GameState,
+  Gender,
 } from './types/game';
 import { DEFAULT_CONFIG } from './constants/gameConfig';
 import { createGameState } from './game/createGameState';
-import { loadBest, loadName, saveBest, saveName } from './utils/storage';
+import {
+  loadBest,
+  loadGender,
+  loadName,
+  saveBest,
+  saveGender,
+  saveName,
+} from './utils/storage';
+import { displayName as resolveName } from './utils/displayName';
 import { gameAudio } from './audio/gameAudio';
 import { useInput } from './hooks/useInput';
 import { useGameLoop } from './hooks/useGameLoop';
@@ -21,6 +30,7 @@ const GAME_OVER_DELAY_MS = 350;
 const createInitialConfig = (): GameConfig => ({
   ...DEFAULT_CONFIG,
   name: loadName(),
+  gender: loadGender(),
 });
 
 export function App() {
@@ -90,6 +100,11 @@ export function App() {
     saveName(name);
   }, []);
 
+  const handleChangeGender = useCallback((gender: Gender) => {
+    setConfig((current) => ({ ...current, gender }));
+    saveGender(gender);
+  }, []);
+
   const { inputRef, onPointerDown, onPointerMove, onPointerUp } = useInput(
     stageRef,
     screen === 'playing',
@@ -115,16 +130,17 @@ export function App() {
         {screen === 'title' && (
           <TitleScreen
             name={config.name}
+            gender={config.gender}
             crawlStyle={config.crawlStyle}
-            bounce={config.bounceHeight}
             bestDistance={bestRef.current.dist}
             onChangeName={handleChangeName}
+            onChangeGender={handleChangeGender}
             onStart={start}
           />
         )}
         {screen === 'over' && (
           <GameOverScreen
-            name={config.name}
+            displayName={resolveName(config.name, config.gender)}
             resultDistance={lastResultRef.current}
             bestDistance={bestRef.current.dist}
             onRetry={start}

@@ -314,6 +314,32 @@ body {
 .t-name:focus {
   border-color: #ff9bb6;
 }
+.t-gender {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.t-gender-btn {
+  font-family: var(--jp);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  background: #fff;
+  border: 2.5px solid #ffd0dd;
+  border-radius: 999px;
+  padding: 7px 20px;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s,
+    border-color 0.12s;
+}
+.t-gender-btn.active {
+  color: #fff;
+  background: linear-gradient(#ff9bb6, #ff7a9c);
+  border-color: transparent;
+  box-shadow: 0 3px 0 #e35f81;
+}
 .t-start {
   font-family: var(--latin);
   font-weight: 800;
@@ -346,12 +372,86 @@ body {
 .t-start.ghost:active {
   box-shadow: 0 1px 0 #ffd0dd;
 }
+.t-help-btn {
+  margin-top: 12px;
+  font-family: var(--jp);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--color-badge);
+  background: transparent;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
 .t-hint {
   margin-top: 16px;
   font-size: 12px;
   font-weight: 700;
   color: #b09;
   opacity: 0.55;
+}
+
+/* ── あそびかたダイアログ ── */
+.help-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(40, 44, 90, 0.45);
+  backdrop-filter: blur(3px);
+}
+.help-panel {
+  width: 100%;
+  max-width: 320px;
+  max-height: 82%;
+  overflow-y: auto;
+  padding: 22px 20px;
+  text-align: left;
+  font-family: var(--jp);
+  color: var(--ink);
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 16px 40px rgba(40, 44, 90, 0.35);
+}
+.help-title {
+  margin: 0 0 12px;
+  text-align: center;
+  font-family: var(--latin);
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--color-title-pink);
+}
+.help-section {
+  margin-bottom: 14px;
+}
+.help-section h3 {
+  margin: 0 0 5px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-badge);
+  letter-spacing: 0.04em;
+}
+.help-section p,
+.help-section li {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.help-section ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.help-section b {
+  font-weight: 800;
+}
+.help-close {
+  display: block;
+  margin: 6px auto 0;
 }
 .t-best {
   margin-top: 8px;
