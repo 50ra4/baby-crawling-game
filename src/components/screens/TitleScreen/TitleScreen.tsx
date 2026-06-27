@@ -1,7 +1,9 @@
 import { useCallback, type ChangeEvent } from 'react';
 import type { CrawlStyle, Gender } from '../../../types/game';
 import { Baby } from '../../sprites/Baby/Baby';
+import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { useRafTime } from '../../../hooks/useRafTime';
+import { useDisclosure } from '../../../hooks/useDisclosure';
 
 const PREVIEW_CRAWL_SPEED = 1.6;
 const NAME_MAX_LENGTH = 8;
@@ -30,6 +32,7 @@ export function TitleScreen({
 }: TitleScreenProps) {
   const time = useRafTime();
   const phase = (time * PREVIEW_CRAWL_SPEED) % 1;
+  const help = useDisclosure();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChangeName(event.target.value);
@@ -90,10 +93,14 @@ export function TitleScreen({
       <button className="t-start" onClick={onStart}>
         はじめる
       </button>
+      <button type="button" className="t-help-btn" onClick={help.open}>
+        あそびかたを みる
+      </button>
       <div className="t-hint">
         ← → / A D で よけてね ・ ドラッグでも うごくよ
       </div>
       {bestDistance > 0 && <div className="t-best">ベスト {bestDistance}m</div>}
+      {help.isOpen && <HelpDialog onClose={help.close} />}
     </div>
   );
 }

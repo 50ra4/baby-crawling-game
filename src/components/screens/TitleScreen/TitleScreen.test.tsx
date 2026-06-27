@@ -82,4 +82,18 @@ describe('TitleScreen', () => {
     expect(getByText('男の子').className).toContain('active');
     expect(getByText('女の子').className).not.toContain('active');
   });
+
+  it('「あそびかたを みる」でダイアログが開く', () => {
+    const { getByText, queryByText } = render(<TitleScreen {...baseProps} />);
+    expect(queryByText('そうさ')).toBeNull();
+    fireEvent.click(getByText('あそびかたを みる'));
+    expect(getByText('そうさ')).toBeInTheDocument();
+  });
+
+  it('ダイアログの「とじる」で閉じる', () => {
+    const { getByText, queryByText } = render(<TitleScreen {...baseProps} />);
+    fireEvent.click(getByText('あそびかたを みる'));
+    fireEvent.click(getByText('とじる'));
+    expect(queryByText('そうさ')).toBeNull();
+  });
 });
