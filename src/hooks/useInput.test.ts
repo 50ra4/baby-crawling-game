@@ -51,6 +51,33 @@ describe('useInput', () => {
     input.remove();
   });
 
+  it('ボタンにフォーカス中はSpaceで確定コールバックが呼ばれない', () => {
+    const onConfirm = vi.fn();
+    renderHook(() => useInput(stageRef, false, onConfirm));
+    const button = document.createElement('button');
+    document.body.appendChild(button);
+    act(() => {
+      button.dispatchEvent(
+        new KeyboardEvent('keydown', { key: ' ', bubbles: true }),
+      );
+    });
+    expect(onConfirm).not.toHaveBeenCalled();
+    button.remove();
+  });
+
+  it('モーダル(aria-modal)表示中はSpaceで確定コールバックが呼ばれない', () => {
+    const onConfirm = vi.fn();
+    renderHook(() => useInput(stageRef, false, onConfirm));
+    const modal = document.createElement('div');
+    modal.setAttribute('aria-modal', 'true');
+    document.body.appendChild(modal);
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+    });
+    expect(onConfirm).not.toHaveBeenCalled();
+    modal.remove();
+  });
+
   it('IME変換確定中（isComposing）のEnterで確定コールバックが呼ばれない', () => {
     const onConfirm = vi.fn();
     renderHook(() => useInput(stageRef, false, onConfirm));

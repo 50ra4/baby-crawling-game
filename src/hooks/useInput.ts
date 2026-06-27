@@ -22,6 +22,21 @@ const isTextInputTarget = (target: EventTarget | null): boolean => {
   );
 };
 
+// ボタン・リンク等のインタラクティブ要素にフォーカスがある場合の判定。
+// Space/Enter はその要素本来の活性化キーなので、確定（開始）は要素自身の
+// クリックに任せ、window 側では二重に発火させない（性別・あそびかた等のボタン）。
+const isInteractiveTarget = (target: EventTarget | null): boolean => {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+  return target.closest('button, a[href], [role="button"]') !== null;
+};
+
+// モーダル（あそびかたダイアログ等）の表示中かどうか。表示中は背後の
+// ゲーム開始を抑止し、ダイアログ操作中の意図しない開始を防ぐ。
+const isModalOpen = (): boolean =>
+  document.querySelector('[aria-modal="true"]') !== null;
+
 type PointerInput = {
   inputRef: RefObject<InputState>;
   onPointerDown: (event: PointerEvent<HTMLDivElement>) => void;
@@ -74,6 +89,11 @@ export const useInput = (
       } else if (RIGHT_KEYS.includes(event.key)) {
         inputRef.current = { ...inputRef.current, right: true, targetX: null };
       } else if (CONFIRM_KEYS.includes(event.key)) {
+        // ボタン等にフォーカス中、またはモーダル表示中は確定（開始）させない。
+        // キーボード操作で性別選択やダイアログを触ると即ゲーム開始する不具合を防ぐ。
+        if (isInteractiveTarget(event.target) || isModalOpen()) {
+          return;
+        }
         onConfirmRef.current();
       }
     };
