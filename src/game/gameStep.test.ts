@@ -117,9 +117,10 @@ describe('stepGame（接触フリーズ中）', () => {
     expect(state.distancePx).toBe(0);
   });
 
-  it('体力が消費されない（フリーズ中のため）', () => {
+  it('フリーズ中でも体力は経過時間に比例して消費される', () => {
     const { state } = stepGame(frozenState(), 0.1, DEFAULT_CONFIG, noInput);
-    expect(state.stamina).toBe(100);
+    // 体力消費は時間ベースのためフリーズ中も継続する（不快度上昇と対称）
+    expect(state.stamina).toBeCloseTo(100 - DEFAULT_CONFIG.drainPerSec * 0.1);
   });
 
   it('スポーンが起きない', () => {
@@ -135,8 +136,11 @@ describe('stepGame（接触フリーズ中）', () => {
       objects: [objOnBaby({ kind: 'bottle' })],
     };
     const { state } = stepGame(base, 0.1, DEFAULT_CONFIG, noInput);
-    expect(state.stamina).toBe(
-      50 + 100 * (DEFAULT_CONFIG.bottleHealPct / 100),
+    // フリーズ中も体力は時間消費されるため、回復は消費後の体力へ加算される
+    expect(state.stamina).toBeCloseTo(
+      50 -
+        DEFAULT_CONFIG.drainPerSec * 0.1 +
+        100 * (DEFAULT_CONFIG.bottleHealPct / 100),
     );
     expect(state.objects.at(0)?.hit).toBe(true);
   });
