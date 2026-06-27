@@ -7,7 +7,7 @@ const baseProps = {
   discomfort: 0,
   distance: 42,
   bestDistance: 99,
-  name: 'たろう',
+  displayName: 'たろう',
 };
 
 describe('Hud', () => {
@@ -27,14 +27,16 @@ describe('Hud', () => {
     expect(getByText('おむつ')).toBeInTheDocument();
   });
 
-  it('名前を表示する', () => {
+  it('渡された表示名をそのまま表示する', () => {
     const { getByText } = render(<Hud {...baseProps} />);
     expect(getByText('たろう')).toBeInTheDocument();
   });
 
-  it('名前が空なら「あかちゃん」を表示する', () => {
-    const { getByText } = render(<Hud {...baseProps} name="" />);
-    expect(getByText('あかちゃん')).toBeInTheDocument();
+  it('敬称付きの表示名もそのまま表示する', () => {
+    const { getByText } = render(
+      <Hud {...baseProps} displayName="たろうくん" />,
+    );
+    expect(getByText('たろうくん')).toBeInTheDocument();
   });
 
   it('不快度100%で「！パンパン！」を表示する', () => {

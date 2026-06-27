@@ -314,6 +314,32 @@ body {
 .t-name:focus {
   border-color: #ff9bb6;
 }
+.t-gender {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.t-gender-btn {
+  font-family: var(--jp);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  background: #fff;
+  border: 2.5px solid #ffd0dd;
+  border-radius: 999px;
+  padding: 7px 20px;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s,
+    border-color 0.12s;
+}
+.t-gender-btn.active {
+  color: #fff;
+  background: linear-gradient(#ff9bb6, #ff7a9c);
+  border-color: transparent;
+  box-shadow: 0 3px 0 #e35f81;
+}
 .t-start {
   font-family: var(--latin);
   font-weight: 800;

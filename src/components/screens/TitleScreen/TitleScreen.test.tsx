@@ -4,10 +4,12 @@ import { TitleScreen } from './TitleScreen';
 
 const baseProps = {
   name: 'たろう',
+  gender: 'girl' as const,
   crawlStyle: 'diagonal' as const,
   bounce: 7,
   bestDistance: 0,
   onChangeName: () => {},
+  onChangeGender: () => {},
   onStart: () => {},
 };
 
@@ -55,5 +57,29 @@ describe('TitleScreen', () => {
       <TitleScreen {...baseProps} bestDistance={0} />,
     );
     expect(queryByText(/ベスト/)).toBeNull();
+  });
+
+  it('「男の子」を押すとonChangeGenderにboyが渡る', () => {
+    const onChangeGender = vi.fn();
+    const { getByText } = render(
+      <TitleScreen {...baseProps} onChangeGender={onChangeGender} />,
+    );
+    fireEvent.click(getByText('男の子'));
+    expect(onChangeGender).toHaveBeenCalledWith('boy');
+  });
+
+  it('「女の子」を押すとonChangeGenderにgirlが渡る', () => {
+    const onChangeGender = vi.fn();
+    const { getByText } = render(
+      <TitleScreen {...baseProps} onChangeGender={onChangeGender} />,
+    );
+    fireEvent.click(getByText('女の子'));
+    expect(onChangeGender).toHaveBeenCalledWith('girl');
+  });
+
+  it('選択中の性別ボタンがactiveになる', () => {
+    const { getByText } = render(<TitleScreen {...baseProps} gender="boy" />);
+    expect(getByText('男の子').className).toContain('active');
+    expect(getByText('女の子').className).not.toContain('active');
   });
 });

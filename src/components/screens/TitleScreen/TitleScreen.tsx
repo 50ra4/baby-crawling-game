@@ -1,5 +1,5 @@
-import type { ChangeEvent } from 'react';
-import type { CrawlStyle } from '../../../types/game';
+import { useCallback, type ChangeEvent } from 'react';
+import type { CrawlStyle, Gender } from '../../../types/game';
 import { Baby } from '../../sprites/Baby/Baby';
 import { useRafTime } from '../../../hooks/useRafTime';
 
@@ -8,20 +8,24 @@ const NAME_MAX_LENGTH = 8;
 
 type TitleScreenProps = {
   name: string;
+  gender: Gender;
   crawlStyle: CrawlStyle;
   bounce: number;
   bestDistance: number;
   onChangeName: (name: string) => void;
+  onChangeGender: (gender: Gender) => void;
   onStart: () => void;
 };
 
-// タイトル画面：ロゴ＋ハイハイプレビュー＋名前入力＋はじめる
+// タイトル画面：ロゴ＋ハイハイプレビュー＋名前入力＋性別＋はじめる
 export function TitleScreen({
   name,
+  gender,
   crawlStyle,
   bounce,
   bestDistance,
   onChangeName,
+  onChangeGender,
   onStart,
 }: TitleScreenProps) {
   const time = useRafTime();
@@ -30,6 +34,12 @@ export function TitleScreen({
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChangeName(event.target.value);
   };
+
+  const selectBoy = useCallback(() => onChangeGender('boy'), [onChangeGender]);
+  const selectGirl = useCallback(
+    () => onChangeGender('girl'),
+    [onChangeGender],
+  );
 
   return (
     <div className="overlay title">
@@ -59,6 +69,24 @@ export function TitleScreen({
         onChange={handleChange}
         placeholder="なまえ"
       />
+      <div className="t-gender">
+        <button
+          type="button"
+          className={'t-gender-btn' + (gender === 'boy' ? ' active' : '')}
+          aria-pressed={gender === 'boy'}
+          onClick={selectBoy}
+        >
+          男の子
+        </button>
+        <button
+          type="button"
+          className={'t-gender-btn' + (gender === 'girl' ? ' active' : '')}
+          aria-pressed={gender === 'girl'}
+          onClick={selectGirl}
+        >
+          女の子
+        </button>
+      </div>
       <button className="t-start" onClick={onStart}>
         はじめる
       </button>

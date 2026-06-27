@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { GameOverScreen } from './GameOverScreen';
 
 const baseProps = {
-  name: 'たろう',
+  displayName: 'たろう',
   resultDistance: 42,
   bestDistance: 99,
   onRetry: () => {},
@@ -16,9 +16,16 @@ describe('GameOverScreen', () => {
     expect(getByText('ゲームオーバー')).toBeInTheDocument();
   });
 
-  it('名前を添えた就寝メッセージを表示する', () => {
+  it('表示名を添えた就寝メッセージを表示する', () => {
     const { getByText } = render(<GameOverScreen {...baseProps} />);
     expect(getByText('たろう は ねむっちゃった')).toBeInTheDocument();
+  });
+
+  it('敬称付きの表示名でも就寝メッセージを表示する', () => {
+    const { getByText } = render(
+      <GameOverScreen {...baseProps} displayName="たろうくん" />,
+    );
+    expect(getByText('たろうくん は ねむっちゃった')).toBeInTheDocument();
   });
 
   it('今回の距離とベスト距離を表示する', () => {
