@@ -1,8 +1,10 @@
-import type { MouseEvent as ReactMouseEvent } from 'react';
+import type { MouseEvent as ReactMouseEvent, RefObject } from 'react';
 import { KINDS, OBJECT_META } from '../../../constants/gameConfig';
 
 type HelpDialogProps = {
   onClose: () => void;
+  // 開いたときにフォーカスを移すため、パネル要素への参照を受け取る
+  panelRef?: RefObject<HTMLDivElement | null>;
 };
 
 // 背景クリックで閉じるため、パネル内クリックは伝播を止める（モジュール定数で安定参照）。
@@ -17,10 +19,11 @@ const OBSTACLE_LABELS = labelsOf(KINDS.obstacle);
 const TOY_LABELS = labelsOf(KINDS.toy);
 
 // あそびかた／ルール説明ダイアログ（操作・パラメータ・障害物・アイテム）
-export function HelpDialog({ onClose }: HelpDialogProps) {
+export function HelpDialog({ onClose, panelRef }: HelpDialogProps) {
   return (
     <div className="help-backdrop" onClick={onClose}>
       <div
+        ref={panelRef}
         className="help-panel"
         role="dialog"
         aria-modal="true"

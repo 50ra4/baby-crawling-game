@@ -95,4 +95,28 @@ describe('TitleScreen', () => {
     fireEvent.click(getByText('とじる'));
     expect(queryByText('そうさ')).toBeNull();
   });
+
+  it('ダイアログ表示中は背景(.overlay.title)がinertになり、閉じると解除される', () => {
+    const { getByText, container } = render(<TitleScreen {...baseProps} />);
+    const overlay = container.querySelector('.overlay.title') as HTMLElement;
+    expect(overlay.hasAttribute('inert')).toBe(false);
+    fireEvent.click(getByText('あそびかたを みる'));
+    expect(overlay.hasAttribute('inert')).toBe(true);
+    fireEvent.click(getByText('とじる'));
+    expect(overlay.hasAttribute('inert')).toBe(false);
+  });
+
+  it('Escキーでダイアログが閉じる', () => {
+    const { getByText, queryByText } = render(<TitleScreen {...baseProps} />);
+    fireEvent.click(getByText('あそびかたを みる'));
+    expect(getByText('そうさ')).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(queryByText('そうさ')).toBeNull();
+  });
+
+  it('ダイアログを開くとフォーカスが「とじる」へ移る', () => {
+    const { getByText } = render(<TitleScreen {...baseProps} />);
+    fireEvent.click(getByText('あそびかたを みる'));
+    expect(document.activeElement).toBe(getByText('とじる'));
+  });
 });
