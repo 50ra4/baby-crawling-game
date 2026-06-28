@@ -49,7 +49,8 @@ export const KINDS = {
 // ゲームバランスの既定値。README/SPEC_confirmed.md の推奨初期値（normalプリセット）。
 export const DEFAULT_CONFIG: GameConfig = {
   scrollSpeed: 200,
-  babyMoveSpeed: 440,
+  babyMoveSpeed: 293,
+  babyAccel: 1500,
   spawnInterval: 0.75,
   obstacleRate: 45,
   toyRate: 30,
@@ -68,7 +69,7 @@ export const DEFAULT_CONFIG: GameConfig = {
   hurtStyle: 'flash',
   playStyle: 'bounce',
   crawlCyclesPerSec: 2.2,
-  bounceHeight: 7,
+  bounceHeight: 3.5,
   shakeIntensity: 8,
   shakeDuration: 0.3,
   theme: 'room',

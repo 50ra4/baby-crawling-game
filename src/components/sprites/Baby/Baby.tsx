@@ -70,8 +70,8 @@ const crawlLimbs = (style: CrawlStyle, a: number, bounce: number): Limbs => {
   // diagonal: 左右の手足を交互に出すクロスクロールを、bob と逆位相の sway/tilt で表現する
   return {
     bob: -Math.abs(Math.sin(a * 2)) * bounce,
-    sway: Math.sin(a) * 4,
-    tilt: Math.sin(a) * 3,
+    sway: Math.sin(a) * 2,
+    tilt: Math.sin(a) * 1.5,
   };
 };
 
