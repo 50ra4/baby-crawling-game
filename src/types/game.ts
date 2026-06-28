@@ -85,6 +85,7 @@ export type InputState = {
 export type GameConfig = {
   scrollSpeed: number;
   babyMoveSpeed: number;
+  babyAccel: number;
   spawnInterval: number;
   obstacleRate: number;
   toyRate: number;
@@ -116,6 +117,7 @@ export type GameConfig = {
 // 毎フレームの可変なゲーム状態
 export type GameState = {
   babyX: number;
+  babyVx: number;
   stamina: number;
   maxStamina: number;
   discomfort: number;

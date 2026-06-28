@@ -93,9 +93,9 @@ describe('KINDS', () => {
 });
 
 describe('DEFAULT_CONFIG', () => {
-  it('スピードが仕様通り(スクロール200/横移動440)である', () => {
+  it('スピードが仕様通り(スクロール200/横移動293)である', () => {
     expect(DEFAULT_CONFIG.scrollSpeed).toBe(200);
-    expect(DEFAULT_CONFIG.babyMoveSpeed).toBe(440);
+    expect(DEFAULT_CONFIG.babyMoveSpeed).toBe(293);
   });
 
   it('難易度がnormalプリセット(間隔0.75/障害物45/おもちゃ30/アイテム25)である', () => {

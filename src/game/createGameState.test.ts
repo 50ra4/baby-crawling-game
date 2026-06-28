@@ -2,9 +2,10 @@ import { createGameState } from './createGameState';
 import { DEFAULT_CONFIG } from '../constants/gameConfig';
 
 describe('createGameState', () => {
-  it('赤ちゃんが画面中央(180)から始まる', () => {
+  it('赤ちゃんが画面中央(180)・速度0から始まる', () => {
     const state = createGameState(DEFAULT_CONFIG);
     expect(state.babyX).toBe(180);
+    expect(state.babyVx).toBe(0);
   });
 
   it('体力が初期体力で満タンになる', () => {

@@ -37,7 +37,13 @@ export const stepGame = (
   const contact = updateContact(state.contact, dt);
 
   // 横移動はフリーズ中でも継続する
-  const babyX = moveBaby(state.babyX, dt, config, input);
+  const { x: babyX, vx: babyVx } = moveBaby(
+    state.babyX,
+    state.babyVx,
+    dt,
+    config,
+    input,
+  );
 
   let working: GameState = {
     ...state,
@@ -45,6 +51,7 @@ export const stepGame = (
     phase,
     contact,
     babyX,
+    babyVx,
   };
 
   // 接触フリーズ中は「スコア・距離の加算」とスクロール・スポーンを停止する（SPEC準拠）。
