@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { HelpDialog } from './HelpDialog';
 
 describe('HelpDialog', () => {
-  it('見出しと操作・パラメータ・障害物・アイテムの説明を表示する', () => {
+  it('見出しと操作・ステータス・スコア・障害物・アイテムの説明を表示する', () => {
     const { getByText, container } = render(<HelpDialog onClose={() => {}} />);
     expect(getByText('あそびかた')).toBeInTheDocument();
     const text = container.textContent ?? '';
@@ -16,6 +16,20 @@ describe('HelpDialog', () => {
     expect(text).toContain('オムツ');
     expect(text).toContain('-10');
     expect(text).toContain('+20%');
+  });
+
+  it('きょりを「ステータス」ではなく「スコア」として見せる', () => {
+    const { getByRole } = render(<HelpDialog onClose={() => {}} />);
+    // 「スコア」見出しが存在する
+    expect(
+      getByRole('heading', { name: 'スコア' }),
+    ).toBeInTheDocument();
+  });
+
+  it('障害物・おもちゃ・アイテムをそれぞれ画像つきで表示する', () => {
+    const { container } = render(<HelpDialog onClose={() => {}} />);
+    // 椅子・ボール・テディベア・アヒル・哺乳瓶・オムツの6種ぶんのスプライト画像
+    expect(container.querySelectorAll('img')).toHaveLength(6);
   });
 
   it('「とじる」でonCloseが呼ばれる', () => {
