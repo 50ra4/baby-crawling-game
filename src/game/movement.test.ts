@@ -128,6 +128,39 @@ describe('moveBaby', () => {
     expect(Math.abs(x - 185)).toBeLessThan(1);
   });
 
+  it('最高速度で移動中に現在地をタップしても目標を行き過ぎず止まる', () => {
+    // 右キーを離した直後の残存速度で現在地(180)をタップ。残存速度を打ち消し、
+    // 目標を通り過ぎてから戻る挙動にならないこと（行き過ぎ防止）。
+    let x = 180;
+    let vx = DEFAULT_CONFIG.babyMoveSpeed;
+    let maxX = x;
+    for (let i = 0; i < 60; i += 1) {
+      ({ x, vx } = moveBaby(x, vx, 1 / 60, DEFAULT_CONFIG, {
+        ...noInput,
+        targetX: 180,
+      }));
+      maxX = Math.max(maxX, x);
+    }
+    expect(maxX).toBeLessThanOrEqual(180 + 0.5);
+    expect(Math.abs(x - 180)).toBeLessThan(1);
+  });
+
+  it('残存速度と逆向きの近いタップ目標でも大きく行き過ぎない', () => {
+    // 右へ最高速度で移動中に、わずかに左(170)をタップ。右へ通り過ぎないこと。
+    let x = 180;
+    let vx = DEFAULT_CONFIG.babyMoveSpeed;
+    let maxX = x;
+    for (let i = 0; i < 120; i += 1) {
+      ({ x, vx } = moveBaby(x, vx, 1 / 60, DEFAULT_CONFIG, {
+        ...noInput,
+        targetX: 170,
+      }));
+      maxX = Math.max(maxX, x);
+    }
+    expect(maxX).toBeLessThanOrEqual(180 + 0.5);
+    expect(Math.abs(x - 170)).toBeLessThan(1);
+  });
+
   it('入力がなく速度0なら動かない', () => {
     const { x, vx } = moveBaby(180, 0, 0.1, DEFAULT_CONFIG, noInput);
     expect(x).toBe(180);
