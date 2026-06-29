@@ -44,7 +44,7 @@ baby-crawling-game/
 | 定数           | `src/constants/gameConfig.ts` | 論理寸法・`laneX`・`OBJECT_META`・`KINDS`・`DEFAULT_CONFIG`     | `types` のみ                            |
 | ゲームロジック | `src/game/`                   | 純粋関数で物理・判定を計算。React 非依存・副作用なし            | `types`・`constants`・`utils`           |
 | フック         | `src/hooks/`                  | rAF ループ・入力集約・時間・モーダル。React 依存の橋渡し        | `game`・`types`・`constants`・`utils`   |
-| コンポーネント | `src/components/`             | stateless 描画（Pure Component）。状態は持たず props を描く     | `types`・`constants`・`utils`・`assets` |
+| コンポーネント | `src/components/`             | 描画担当。sprites/backgrounds/hud/Playfield は stateless な Pure Component、`screens/` と `Stage` は UI ローカル状態を持つ独立ユニット | `types`・`constants`・`utils`・`hooks`・`assets` |
 | オーディオ     | `src/audio/`                  | 効果音・BGM 合成のシングルトン                                  | `types`                                 |
 | ユーティリティ | `src/utils/`                  | `math`（clamp/lerp）・`color`（補間）・`storage`・`displayName` | 最小限・独立寄り                        |
 | ルート         | `src/App.tsx`                 | 状態管理の集約点。画面遷移・設定・ループ駆動・イベント消費      | ほぼ全ユニット                          |
@@ -52,7 +52,13 @@ baby-crawling-game/
 **ユニット境界の原則**:
 
 - ゲーム物理は `src/game/` の純粋関数に閉じ込め、React に依存させない（テスト容易・移植容易）。
-- コンポーネントは状態・副作用を持たず、状態は `App.tsx` に集約する。
+- **ゲーム進行・共有状態**（`config`・`screen`・`gameRef`・`bestRef`）は `App.tsx` を単一の源泉として集約する。画面をまたいで共有する状態だけをここに置く。
+- **UI ローカルな状態・副作用**は各画面ユニットが自前で閉じ込め、`App` には引き上げない:
+  - `Stage`: レスポンシブ縮尺（`useState`/`useEffect` でコンテナ幅に追従）
+  - `TitleScreen`: あそびかたダイアログ開閉（`useModal`）・演出用時刻（`useRafTime`）
+  - `GameOverScreen`: 演出用時刻（`useRafTime`）
+- sprites / backgrounds / hud / Playfield など描画専従のコンポーネントは状態・副作用を持たない Pure Component とし、props だけで描く。
+- 画面（`TitleScreen`/`GameOverScreen`）は `screen` で条件レンダリングされる独立ユニットで、コード分割の自然な境界となる。初期バンドルを軽くするため、各画面は画面単位で分割し `React.lazy` + `Suspense` で遅延読み込みする方針（現状は同期 import）。
 - 副作用（音・遷移）はロジックがイベントとして返し、`App` だけが実行する（[tech.md](./tech.md) §5）。
 - 入力は `ref` 経由で渡し、毎フレームの再レンダリングを避ける。
 
