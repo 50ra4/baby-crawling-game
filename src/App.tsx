@@ -114,7 +114,7 @@ export function App() {
   useGameLoop(screen === 'playing', gameRef, config, inputRef, handleEvents);
 
   return (
-    <div className="root">
+    <div className="h-full">
       <Stage
         stageRef={stageRef}
         onPointerDown={onPointerDown}

@@ -49,11 +49,11 @@ export function Playfield({
 
   return (
     <div
-      className="playfield"
+      className="absolute inset-0 overflow-hidden"
       style={{ transform: `translate(${shakeX}px, ${shakeY}px)` }}
     >
       <div
-        className="bg"
+        className="absolute inset-0"
         style={backgroundStyle(config.theme, game.distancePx)}
       />
       <div className="runner" style={centerRunnerStyle(config.theme)} />

@@ -9,7 +9,7 @@ type GaugeProps = {
 export function Gauge({ icon, ratio, color, warn }: GaugeProps) {
   const widthPct = Math.max(0, Math.min(1, ratio)) * 100;
   return (
-    <div className="gauge">
+    <div className="relative flex items-center gap-1.5">
       <span className="g-ic">{icon}</span>
       <div className="g-track">
         <div
