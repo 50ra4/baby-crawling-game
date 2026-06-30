@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+# lint/型チェック/テスト/ビルドのみ。依存パッケージのコード（npm ci の postinstall・
+# Vite プラグイン）に書き込みトークンを渡さないよう最小権限へ固定する（deploy.yml /
+# pr-preview.yml の build ジョブと同じハードニング）。
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -15,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:

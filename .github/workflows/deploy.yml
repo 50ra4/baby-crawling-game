@@ -7,26 +7,36 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# 既定は最小権限。依存パッケージのコード（npm ci の postinstall・Vite プラグイン）を
+# 実行する build ジョブに書き込みトークンを渡さない。
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# 本番デプロイ同士のみ直列化。preview とは別グループにする。
+# （gh-pages 書き込みを共有グループ+cancel-in-progress:false にすると「実行中1＋保留1、
+#  新規 queue が古い保留を取り消す」公式仕様により、保留中の本番デプロイが後続 preview の
+#  queue に取り消され本番が静かに更新されない事故が起きるため。）
 concurrency:
-  group: pages
+  group: gh-pages-prod
   cancel-in-progress: false
 
 jobs:
+  # 依存パッケージのコードを実行するジョブ。checkout は persist-credentials:false、
+  # 権限は contents:read に限定し、書き込みトークンを一切与えず成果物のみ artifact 化する。
   build:
     if: >-
       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
       (github.event.workflow_run.event == 'push' &&
        github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -38,16 +48,48 @@ jobs:
       - name: Build
         run: npx vite build --base /baby-crawling-game/
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: github-pages-dist
           path: dist
+          retention-days: 1
 
+  # gh-pages への公開のみを行うジョブ。信頼できるアクションと静的成果物だけを扱うため
+  # contents:write を付与してよい。本番デプロイを環境保護ゲートの内側に置き、
+  # workflow_dispatch での承認バイパス（required reviewers / deployment protection の回避）を防ぐ。
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: https://50ra4.github.io/baby-crawling-game/
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages-dist
+          path: dist
+
+      # JamesIves は force:false で最大3回 rebase リトライし、preview との同時 push 競合
+      # (non-fast-forward)を吸収する（peaceiris はリトライ無しのため差し替え）。
+      # clean:true + clean-exclude で gh-pages root の陳腐化ファイル（旧ハッシュ資産・
+      # リネーム/削除された固定名アセット）は掃除しつつ、pr-preview/ 配下の各 PR プレビューは
+      # 保持する（内部 rsync --delete に --exclude pr-preview/ が渡り削除対象から除外される）。
+      - name: Deploy to gh-pages (root)
+        uses: JamesIves/github-pages-deploy-action@4a3abc783e1a24aeb44c16e869ad83caf6b4cc23 # v4.7.4
+        with:
+          branch: gh-pages
+          folder: dist
+          clean: true
+          clean-exclude: |
+            pr-preview/
+            pr-preview/**
+          force: false
+          git-config-name: 'github-actions[bot]'
+          git-config-email: 'github-actions[bot]@users.noreply.github.com'
+          commit-message: 'deploy: ${{ github.event.workflow_run.head_sha || github.sha }}'
