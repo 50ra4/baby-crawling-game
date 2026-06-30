@@ -1,0 +1,44 @@
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+permissions:
+  contents: write # gh-pages へ push / 削除
+  pull-requests: write # PR へプレビューURLコメント
+
+concurrency:
+  group: preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr-preview:
+    runs-on: ubuntu-latest
+    # fork PR ではビルド/デプロイしない（同一リポジトリの PR のみ対象）
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install deps
+        if: github.event.action != 'closed'
+        run: npm ci
+
+      - name: Build (preview base path)
+        if: github.event.action != 'closed'
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: npx vite build --base "/baby-crawling-game/pr-preview/pr-${PR_NUMBER}/"
+
+      - name: Deploy / Clean preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./dist
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto # open/sync→deploy, closed→remove
