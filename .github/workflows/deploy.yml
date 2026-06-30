@@ -77,13 +77,18 @@ jobs:
 
       # JamesIves は force:false で最大3回 rebase リトライし、preview との同時 push 競合
       # (non-fast-forward)を吸収する（peaceiris はリトライ無しのため差し替え）。
-      # clean:false で gh-pages 上の pr-preview/ 配下を保持（peaceiris keep_files 相当）。
+      # clean:true + clean-exclude で gh-pages root の陳腐化ファイル（旧ハッシュ資産・
+      # リネーム/削除された固定名アセット）は掃除しつつ、pr-preview/ 配下の各 PR プレビューは
+      # 保持する（内部 rsync --delete に --exclude pr-preview/ が渡り削除対象から除外される）。
       - name: Deploy to gh-pages (root)
         uses: JamesIves/github-pages-deploy-action@4a3abc783e1a24aeb44c16e869ad83caf6b4cc23 # v4.7.4
         with:
           branch: gh-pages
           folder: dist
-          clean: false
+          clean: true
+          clean-exclude: |
+            pr-preview/
+            pr-preview/**
           force: false
           git-config-name: 'github-actions[bot]'
           git-config-email: 'github-actions[bot]@users.noreply.github.com'
