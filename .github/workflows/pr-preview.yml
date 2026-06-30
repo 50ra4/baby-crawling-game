@@ -41,7 +41,7 @@ jobs:
 
       - name: Build (preview base path)
         env:
-          PR_NUMBER: ${{ github.event.number }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: npx vite build --base "/baby-crawling-game/pr-preview/pr-${PR_NUMBER}/"
 
       - uses: actions/upload-artifact@v4
