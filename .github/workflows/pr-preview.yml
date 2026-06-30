@@ -4,19 +4,24 @@ on:
   pull_request:
     types: [opened, reopened, synchronize, closed]
 
+# 既定は最小権限。PR 由来コードをビルドする build ジョブには書き込みトークンを与えない
 permissions:
-  contents: write # gh-pages へ push / 削除
-  pull-requests: write # PR へプレビューURLコメント
+  contents: read
 
 concurrency:
   group: preview-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  pr-preview:
+  # PR ブランチのコード（npm ci の postinstall や Vite プラグイン）を実行するジョブ。
+  # 書き込みトークンを渡さないよう contents:read に限定し、成果物のみ artifact 化する。
+  build:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.action != 'closed'
     runs-on: ubuntu-latest
-    # fork PR ではビルド/デプロイしない（同一リポジトリの PR のみ対象）
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -25,15 +30,41 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
 
-      - name: Install deps
-        if: github.event.action != 'closed'
-        run: npm ci
+      - run: npm ci
 
       - name: Build (preview base path)
-        if: github.event.action != 'closed'
         env:
           PR_NUMBER: ${{ github.event.number }}
         run: npx vite build --base "/baby-crawling-game/pr-preview/pr-${PR_NUMBER}/"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr-preview-dist
+          path: dist
+          retention-days: 1
+
+  # gh-pages への公開/削除のみを行うジョブ。信頼できるアクションと静的成果物だけを
+  # 扱うため、書き込みトークンを PR 由来コードへ晒さずに済む。
+  deploy:
+    needs: build
+    # open/sync: build 成功時のみデプロイ。closed: build をスキップして削除のみ実行。
+    if: >-
+      always() &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (needs.build.result == 'success' || github.event.action == 'closed')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # gh-pages へ push / 削除
+      pull-requests: write # PR へプレビューURLコメント
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifact
+        if: github.event.action != 'closed'
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-preview-dist
+          path: dist
 
       - name: Deploy / Clean preview
         uses: rossjrw/pr-preview-action@v1

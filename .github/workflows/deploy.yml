@@ -21,6 +21,10 @@ jobs:
       (github.event.workflow_run.event == 'push' &&
        github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
+    # 本番デプロイを環境保護ゲートの内側に戻す（workflow_dispatch での承認バイパスを防ぐ）
+    environment:
+      name: github-pages
+      url: https://50ra4.github.io/baby-crawling-game/
     steps:
       - uses: actions/checkout@v4
         with:
