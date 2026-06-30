@@ -1,0 +1,84 @@
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+# 既定は最小権限。PR 由来コードを実行する build ジョブに書き込みトークンを与えない
+permissions:
+  contents: read
+
+# PR 単位で直列化。closed(マージ)時の github.ref は base ブランチ(refs/heads/main)になり、
+# github.ref キーでは open/sync run(refs/pull/<n>/merge)と直列化されずクリーンアップが
+# レースするため、PR 番号でキーする。本番(gh-pages-prod)とは別グループ。
+concurrency:
+  group: pr-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # PR ブランチのコード（npm ci の postinstall や Vite プラグイン）を実行するジョブ。
+  # 書き込みトークンを渡さないよう contents:read かつ persist-credentials:false にし、
+  # 成果物のみ artifact 化する。
+  build:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Build (preview base path)
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: npx vite build --base "/baby-crawling-game/pr-preview/pr-${PR_NUMBER}/"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr-preview-dist
+          path: dist
+          retention-days: 1
+
+  # gh-pages への公開/削除のみを行うジョブ。信頼できるアクションと静的成果物だけを扱う。
+  deploy:
+    needs: build
+    # open/sync: build 成功時のみデプロイ。closed: build をスキップし削除のみ実行。
+    if: >-
+      always() &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (needs.build.result == 'success' || github.event.action == 'closed')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # gh-pages へ push / 削除
+      pull-requests: write # PR へプレビューURLコメント
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifact
+        if: github.event.action != 'closed'
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-preview-dist
+          path: dist
+
+      # 内部 JamesIves(force:false)で最大3回 rebase リトライするため競合に強い。
+      # remove は内部で source-dir を参照しないため closed 時に dist 未取得でも成功する。
+      - name: Deploy / Clean preview
+        uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+        with:
+          source-dir: ./dist
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto # open/sync→deploy, closed→remove
