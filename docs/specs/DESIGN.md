@@ -100,19 +100,21 @@
 
 ### ボタン
 
-- **Primary**（`.t-start`）: `linear-gradient(#ff9fb8, #ff7a9c)`、白文字、角丸 16px（`--radius-control`）、`shadow 0 5px 0 #e15a7e, 0 10px 18px rgba(225,90,126,.28)`。`:active` で `translateY(4px)` + `shadow 0 1px 0 #e15a7e`（3D プレス）
-- **Ghost**（`.t-start.ghost`）: `#fff` 背景、`#ff7a9c` 文字、`shadow 0 5px 0 #ffd8e2`
+フラット・モダン方針：厚い 3D 影は用いず、ソリッド塗り＋やわらか影、押下で軽く沈む。
+
+- **Primary**（`.t-start`）: ソリッド `#ff7a9c`、白文字、角丸 16px（`--radius-control`）、`shadow 0 8px 20px rgba(225,90,126,.28)`。`:hover` で `#e15a7e`、`:active` で `translateY(1px) scale(.98)` + 影を弱める
+- **Ghost**（`.t-start.ghost`）: `#fff` 背景、`#e15a7e` 文字、border `2px solid #ffd8e2`、`shadow 0 8px 20px rgba(255,160,180,.2)`
 - ゲームオーバーのボタンは 17px / `padding 11px 26px`
-- フォーカス（`:focus-visible`）: `outline 3px solid #e15a7e`（3D 影と競合しないよう outline を使用）
+- フォーカス（`:focus-visible`）: `outline 3px solid #e15a7e`
 
 ### 名前入力（`.t-name`）
 
 - width 180px、padding 10px 12px、border `2px solid #ffd8e2`、角丸 16px（`--radius-control`）、背景 `#fff`、focus で `border-color #ff9fb8` ＋ `:focus-visible` で `ring 3px rgba(255,122,156,.5)`、最大 8 字
 
-### 性別ボタン（`.t-gender-btn`）
+### 性別ラジオ（`.t-gender-btn`）
 
-- pill 形（角丸 999px）、padding 8px 22px、border `2px solid #ffd8e2`
-- `.active`: `linear-gradient(#ff9fb8, #ff7a9c)` + 白文字 + `shadow 0 3px 0 #e15a7e`、`aria-pressed` 連動
+- 選択マーク付きチップ（ラジオ）。pill 形（角丸 999px）、`::before` で 16px のラジオドットを描画、padding `9px 18px 9px 14px`、border `2px solid #ffd8e2`
+- `.active`: 文字 `#e15a7e`・背景 `#fff8f2`（surface-warm）・border `#ff9fb8`、ドットは `#ff7a9c` 塗り＋内側白リング（`inset 0 0 0 3px #fff`）で選択を明示。`aria-pressed` 連動
 - フォーカス（`:focus-visible`）: `outline 3px solid #e15a7e`
 
 ### ゲージ（`.gauge` / `Gauge.tsx`）

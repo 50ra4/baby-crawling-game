@@ -240,7 +240,12 @@
       0 3px 0 #fff,
       0 6px 14px rgba(255, 122, 156, 0.22);
   }
+  /* 性別ラジオ（選択マーク付きチップ）。絵本トーンに合わせ、やわらかい塗りと
+     ラジオドットで選択を明示する。マークは ::before で描画し JSX 構造は変えない。 */
   .t-gender-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: var(--font-jp);
     font-weight: 700;
     font-size: 15px;
@@ -248,59 +253,84 @@
     background: var(--color-surface);
     border: 2px solid var(--color-border-pink);
     border-radius: var(--radius-pill);
-    padding: 8px 22px;
+    padding: 9px 18px 9px 14px;
     cursor: pointer;
     transition:
-      background 0.12s,
-      color 0.12s,
-      border-color 0.12s;
+      background 0.15s,
+      color 0.15s,
+      border-color 0.15s;
+  }
+  .t-gender-btn::before {
+    content: '';
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-border-pink);
+    background: #fff;
+    transition:
+      border-color 0.15s,
+      background 0.15s,
+      box-shadow 0.15s;
+  }
+  .t-gender-btn:hover {
+    border-color: var(--color-primary-light);
   }
   .t-gender-btn.active {
-    color: #fff;
-    background: linear-gradient(
-      var(--color-primary-light),
-      var(--color-primary)
-    );
-    border-color: transparent;
-    box-shadow: 0 3px 0 var(--color-primary-deep);
+    color: var(--color-primary-deep);
+    background: var(--color-surface-warm);
+    border-color: var(--color-primary-light);
   }
+  .t-gender-btn.active::before {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+
+  /* プライマリ／ゴーストボタン（フラット・モダン：ソリッド塗り＋やわらか影、
+     押下で軽く沈む。厚い 3D 影は用いない）。 */
   .t-start {
     font-family: var(--font-latin);
     font-weight: 700;
     font-size: 20px;
     color: #fff;
-    background: linear-gradient(
-      var(--color-primary-light),
-      var(--color-primary)
-    );
-    border: 0;
+    background: var(--color-primary);
+    border: 2px solid transparent;
     border-radius: var(--radius-control);
-    padding: 13px 40px;
+    padding: 14px 40px;
     margin-top: 16px;
     cursor: pointer;
-    box-shadow:
-      0 5px 0 var(--color-primary-deep),
-      0 10px 18px rgba(225, 90, 126, 0.28);
+    box-shadow: 0 8px 20px rgba(225, 90, 126, 0.28);
     transition:
-      transform 0.08s,
-      box-shadow 0.08s;
+      transform 0.12s ease,
+      box-shadow 0.12s ease,
+      background 0.12s ease;
+  }
+  .t-start:hover {
+    background: var(--color-primary-deep);
+    box-shadow: 0 10px 24px rgba(225, 90, 126, 0.32);
   }
   .t-start:active {
-    transform: translateY(4px);
-    box-shadow: 0 1px 0 var(--color-primary-deep);
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(225, 90, 126, 0.24);
   }
   .t-start.ghost {
     background: var(--color-surface);
-    color: var(--color-primary);
-    box-shadow:
-      0 5px 0 var(--color-border-pink),
-      0 10px 18px rgba(255, 160, 180, 0.22);
+    color: var(--color-primary-deep);
+    border-color: var(--color-border-pink);
+    box-shadow: 0 8px 20px rgba(255, 160, 180, 0.2);
+  }
+  .t-start.ghost:hover {
+    background: #fff;
+    border-color: var(--color-primary-light);
+    box-shadow: 0 10px 24px rgba(255, 160, 180, 0.24);
   }
   .t-start.ghost:active {
-    box-shadow: 0 1px 0 var(--color-border-pink);
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(255, 160, 180, 0.18);
   }
 
-  /* キーボード操作時のフォーカスリング（3D 影と競合しないよう outline を使用）。 */
+  /* キーボード操作時のフォーカスリング（outline を使用）。 */
   .t-start:focus-visible,
   .t-gender-btn:focus-visible {
     outline: 3px solid var(--color-primary-deep);
