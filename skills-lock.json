@@ -13,6 +13,12 @@
       "skillPath": "plugins/frontend-mobile-development/skills/tailwind-design-system/SKILL.md",
       "computedHash": "cd61afd28f594e8b6712b61749209cbb4466e3eec4e4223793bbd97fc85c1b63"
     },
+    "test-driven-development": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/test-driven-development/SKILL.md",
+      "computedHash": "eee144aea35d783296d178017e9fe843c6d16cc8b240e106f5e50910f6caf329"
+    },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
