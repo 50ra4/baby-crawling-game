@@ -1,16 +1,34 @@
 @import 'tailwindcss';
 
-/* デザイントークン（絵本トーンの丸ゴシック＋淡い配色）。
-   色は @theme に集約し、各クラス・JSX から var(--color-*) / カラーユーティリティで参照する。 */
+/* デザイントークン（絵本トーンの丸ゴシック＋淡いピンク配色）。
+   色・半径・フォントは @theme に集約し、各クラス・JSX から
+   var(--color-*) / var(--radius-*) またはカラー・角丸ユーティリティで参照する。 */
 @theme {
-  --color-ink: #5a4a3a;
+  /* テキスト */
+  --color-ink: #57473c; /* 本文・ラベルのダークブラウン */
+  --color-ink-soft: #9c8a7d; /* 副次ラベル・キャプションのミュートブラウン */
+
+  /* ピンクファミリー（テーマの基調） */
   --color-primary: #ff7a9c;
-  --color-primary-light: #ff9bb6;
-  --color-primary-deep: #e35f81;
-  --color-border-pink: #ffd0dd;
-  --color-badge: #e98aa6;
+  --color-primary-light: #ff9fb8;
+  --color-primary-deep: #e15a7e;
+  --color-border-pink: #ffd8e2;
+  --color-badge: #db7595;
+
+  /* ニュートラル・サーフェス */
+  --color-cream: #f6eee3; /* 画面全体の背景基調 */
+  --color-cream-deep: #ecdfce; /* 背景の陰影・帯の深み */
+  --color-surface: #ffffff; /* カード・パネルの白 */
+  --color-surface-warm: #fff8f2; /* 温かみのあるパネル地 */
+
+  /* 角丸スケール */
+  --radius-control: 16px; /* ボタン・入力 */
+  --radius-card: 20px; /* パネル・統計カード */
+  --radius-pill: 999px; /* ピル・トラック */
+
+  /* フォント */
   --font-jp: 'M PLUS Rounded 1c', system-ui, sans-serif;
-  --font-latin: 'Baloo 2', 'M PLUS Rounded 1c', system-ui, sans-serif;
+  --font-latin: 'Fredoka', 'M PLUS Rounded 1c', system-ui, sans-serif;
 }
 
 @layer base {
@@ -25,11 +43,21 @@
     overflow: hidden;
     font-family: var(--font-jp);
   }
+  /* 全画面フィット：ステージ外の余白（レターボックス）を背景と一体化させ、
+     浮きカードではなく画面いっぱいの Web アプリとして見せる。 */
   body {
-    background: #efe7dc;
+    background-color: var(--color-cream);
     background-image:
-      radial-gradient(circle at 20% 15%, #fff5 0 30%, transparent 60%),
-      radial-gradient(circle at 85% 80%, #f7d9c855 0 40%, transparent 70%);
+      radial-gradient(
+        circle at 22% 12%,
+        rgba(255, 255, 255, 0.6) 0 26%,
+        transparent 60%
+      ),
+      radial-gradient(
+        circle at 84% 84%,
+        rgba(255, 190, 205, 0.22) 0 38%,
+        transparent 72%
+      );
   }
   #root {
     height: 100%;
@@ -41,14 +69,11 @@
    子孫セレクタを持つタイポグラフィのみ。 */
 @layer components {
   /* ── ステージ / 演出 ── */
+  /* 全画面フィット：角丸・浮き影を除去し、画面端まで届く矩形にする。 */
   .stage {
     position: relative;
     transform-origin: center center;
-    border-radius: 30px;
     overflow: hidden;
-    box-shadow:
-      0 24px 70px rgba(120, 90, 60, 0.3),
-      0 4px 0 rgba(255, 255, 255, 0.6) inset;
     background: #cfe;
     touch-action: none;
     cursor: default;
@@ -76,7 +101,7 @@
     position: absolute;
     transform: translate(-50%, -100%);
     font-family: var(--font-latin);
-    font-weight: 800;
+    font-weight: 700;
     font-size: 18px;
     white-space: nowrap;
     text-shadow:
@@ -91,7 +116,7 @@
     z-index: 9;
     pointer-events: none;
     font-family: var(--font-latin);
-    font-weight: 800;
+    font-weight: 700;
     font-size: 32px;
     white-space: nowrap;
     animation: burst 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) both;
@@ -125,31 +150,34 @@
     font-weight: 800;
     color: #fff;
     text-shadow:
-      0 1px 2px rgba(120, 90, 60, 0.55),
+      0 1px 2px rgba(87, 71, 60, 0.55),
       0 0 4px rgba(0, 0, 0, 0.2);
   }
   .g-track {
     position: relative;
     flex: 1;
-    height: 13px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) inset;
+    height: 12px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow:
+      inset 0 1px 2px rgba(87, 71, 60, 0.18),
+      0 1px 0 rgba(255, 255, 255, 0.5);
     overflow: hidden;
   }
   .g-fill {
     height: 100%;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     /* 幅は毎フレーム値どおりに即反映する（トランジションを付けると毎フレーム
        再スタートして進まず、バーが減らないように見えるため）。色のみフェード。 */
     transition: background 0.3s;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
   }
   .g-warn {
     position: absolute;
     left: 42px;
     top: -1px;
     font-family: var(--font-latin);
-    font-weight: 800;
+    font-weight: 700;
     font-size: 11px;
     color: #fff;
     text-shadow: 0 1px 2px #c0392b;
@@ -157,11 +185,11 @@
   }
   .sc-now {
     font-size: 30px;
-    font-weight: 800;
+    font-weight: 700;
     color: #fff;
     line-height: 1;
     text-shadow:
-      0 2px 0 rgba(120, 90, 60, 0.35),
+      0 2px 0 rgba(87, 71, 60, 0.35),
       0 0 8px rgba(255, 255, 255, 0.5);
   }
   .hud-name {
@@ -169,12 +197,12 @@
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    font-weight: 800;
+    font-weight: 700;
     font-size: 13px;
     color: #fff;
-    background: rgba(120, 90, 60, 0.4);
-    padding: 3px 14px;
-    border-radius: 999px;
+    background: rgba(87, 71, 60, 0.38);
+    padding: 4px 16px;
+    border-radius: var(--radius-pill);
     backdrop-filter: blur(4px);
   }
 
@@ -188,11 +216,11 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 26px;
+    padding: 28px;
     background: radial-gradient(
-      circle at 50% 30%,
-      rgba(255, 250, 245, 0.92),
-      rgba(255, 243, 235, 0.96)
+      circle at 50% 28%,
+      rgba(255, 251, 247, 0.94),
+      rgba(252, 242, 233, 0.97)
     );
   }
   .over {
@@ -203,24 +231,24 @@
   /* ── タイトル ── */
   .t-title {
     font-family: var(--font-latin);
-    font-weight: 800;
-    font-size: 42px;
+    font-weight: 700;
+    font-size: 40px;
     line-height: 1.05;
     margin: 0 0 6px;
     color: var(--color-primary);
     text-shadow:
       0 3px 0 #fff,
-      0 6px 14px rgba(255, 122, 156, 0.25);
+      0 6px 14px rgba(255, 122, 156, 0.22);
   }
   .t-gender-btn {
     font-family: var(--font-jp);
     font-weight: 700;
     font-size: 15px;
     color: var(--color-ink);
-    background: #fff;
-    border: 2.5px solid var(--color-border-pink);
-    border-radius: 999px;
-    padding: 7px 20px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border-pink);
+    border-radius: var(--radius-pill);
+    padding: 8px 22px;
     cursor: pointer;
     transition:
       background 0.12s,
@@ -238,7 +266,7 @@
   }
   .t-start {
     font-family: var(--font-latin);
-    font-weight: 800;
+    font-weight: 700;
     font-size: 20px;
     color: #fff;
     background: linear-gradient(
@@ -246,13 +274,13 @@
       var(--color-primary)
     );
     border: 0;
-    border-radius: 18px;
+    border-radius: var(--radius-control);
     padding: 13px 40px;
     margin-top: 16px;
     cursor: pointer;
     box-shadow:
       0 5px 0 var(--color-primary-deep),
-      0 10px 16px rgba(227, 95, 129, 0.3);
+      0 10px 18px rgba(225, 90, 126, 0.28);
     transition:
       transform 0.08s,
       box-shadow 0.08s;
@@ -262,14 +290,21 @@
     box-shadow: 0 1px 0 var(--color-primary-deep);
   }
   .t-start.ghost {
-    background: #fff;
+    background: var(--color-surface);
     color: var(--color-primary);
     box-shadow:
       0 5px 0 var(--color-border-pink),
-      0 10px 16px rgba(255, 160, 180, 0.25);
+      0 10px 18px rgba(255, 160, 180, 0.22);
   }
   .t-start.ghost:active {
     box-shadow: 0 1px 0 var(--color-border-pink);
+  }
+
+  /* キーボード操作時のフォーカスリング（3D 影と競合しないよう outline を使用）。 */
+  .t-start:focus-visible,
+  .t-gender-btn:focus-visible {
+    outline: 3px solid var(--color-primary-deep);
+    outline-offset: 3px;
   }
 
   /* ── あそびかたダイアログ ── */
@@ -289,19 +324,19 @@
     max-width: 320px;
     max-height: 82%;
     overflow-y: auto;
-    padding: 22px 20px;
+    padding: 24px 22px;
     text-align: left;
     font-family: var(--font-jp);
     color: var(--color-ink);
-    background: #fff;
-    border-radius: 22px;
-    box-shadow: 0 16px 40px rgba(40, 44, 90, 0.35);
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    box-shadow: 0 16px 40px rgba(40, 44, 90, 0.32);
   }
   .help-section {
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
   .help-section h3 {
-    margin: 0 0 5px;
+    margin: 0 0 6px;
     font-size: 13px;
     font-weight: 800;
     color: var(--color-badge);
@@ -311,21 +346,21 @@
   .help-section li {
     margin: 0;
     font-size: 13px;
-    font-weight: 600;
-    line-height: 1.6;
+    font-weight: 500;
+    line-height: 1.65;
   }
   .help-section ul {
     margin: 0;
     padding-left: 18px;
   }
   .help-section b {
-    font-weight: 800;
+    font-weight: 700;
   }
 
   /* ── ゲームオーバー ── */
   .o-over {
     font-family: var(--font-latin);
-    font-weight: 800;
+    font-weight: 700;
     font-size: 30px;
     letter-spacing: 0.04em;
     color: #fff;
@@ -343,7 +378,7 @@
   }
   .o-stat {
     background: rgba(255, 255, 255, 0.92);
-    border-radius: 16px;
+    border-radius: var(--radius-card);
     padding: 10px 22px;
     text-align: center;
     min-width: 96px;
@@ -352,13 +387,13 @@
     display: block;
     font-size: 11px;
     font-weight: 700;
-    color: #a98;
+    color: var(--color-ink-soft);
     letter-spacing: 0.06em;
   }
   .o-stat b {
     font-family: var(--font-latin);
     font-size: 30px;
-    font-weight: 800;
+    font-weight: 700;
     color: #7c8bbf;
     line-height: 1.1;
   }
@@ -389,5 +424,15 @@
 @keyframes pulse {
   to {
     transform: scale(1.08);
+  }
+}
+
+/* モーション過敏設定を尊重：CSS 演出（警告 pulse / 接触 burst）を抑制する。 */
+@media (prefers-reduced-motion: reduce) {
+  .g-warn {
+    animation: none;
+  }
+  .contact-burst {
+    animation-duration: 0.01ms;
   }
 }
