@@ -42,7 +42,7 @@ export function HelpDialog({ onClose, panelRef }: HelpDialogProps) {
       >
         <h2
           id="help-title"
-          className="font-latin text-primary m-0 mb-3 text-center text-[24px] font-extrabold"
+          className="font-latin text-primary m-0 mb-3 text-center text-[24px] font-bold"
         >
           あそびかた
         </h2>
