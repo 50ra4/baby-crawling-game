@@ -19,9 +19,11 @@ const SPRITE_SIZE = 40;
 // 画像つきオブジェクトのチップ（スプライト＋ラベル）。ラベルは OBJECT_META から引いて表記ずれを防ぐ
 function ObjectChip({ kind }: { kind: ObjectKind }) {
   return (
-    <span className="help-obj">
+    <span className="flex w-14 flex-col items-center gap-0.5 text-center">
       <ObjectSprite kind={kind} size={SPRITE_SIZE} />
-      <b>{OBJECT_META[kind].label}</b>
+      <b className="text-[11px] leading-[1.2] font-bold">
+        {OBJECT_META[kind].label}
+      </b>
     </span>
   );
 }
@@ -38,7 +40,10 @@ export function HelpDialog({ onClose, panelRef }: HelpDialogProps) {
         aria-labelledby="help-title"
         onClick={stopPropagation}
       >
-        <h2 id="help-title" className="help-title">
+        <h2
+          id="help-title"
+          className="font-latin text-primary m-0 mb-3 text-center text-[24px] font-extrabold"
+        >
           あそびかた
         </h2>
 
@@ -63,27 +68,29 @@ export function HelpDialog({ onClose, panelRef }: HelpDialogProps) {
         <section className="help-section">
           <h3>スコア</h3>
           <p>
-            <b>きょり(m)</b>：どこまで すすめたかが スコア。とおくまで すすもう！
+            <b>きょり(m)</b>：どこまで すすめたかが スコア。とおくまで
+            すすもう！
           </p>
         </section>
 
         <section className="help-section">
           <h3>きをつけて</h3>
-          <div className="help-group">
+          <div className="mb-2 last:mb-0">
             <p>
               <b>障害物</b>：ぶつかると 体力 -10「いたっ！」
             </p>
-            <div className="help-objs">
+            <div className="mt-1.5 flex flex-wrap gap-3">
               {KINDS.obstacle.map((kind) => (
                 <ObjectChip key={kind} kind={kind} />
               ))}
             </div>
           </div>
-          <div className="help-group">
+          <div className="mb-2 last:mb-0">
             <p>
-              <b>おもちゃ</b>：さわると 体力 -10、でも あそんじゃう「遊んじゃった！」
+              <b>おもちゃ</b>：さわると 体力 -10、でも
+              あそんじゃう「遊んじゃった！」
             </p>
-            <div className="help-objs">
+            <div className="mt-1.5 flex flex-wrap gap-3">
               {KINDS.toy.map((kind) => (
                 <ObjectChip key={kind} kind={kind} />
               ))}
@@ -93,16 +100,16 @@ export function HelpDialog({ onClose, panelRef }: HelpDialogProps) {
 
         <section className="help-section">
           <h3>アイテム</h3>
-          <ul className="help-items">
-            <li>
+          <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
+            <li className="flex items-center gap-2.5">
               <ObjectSprite kind="bottle" size={SPRITE_SIZE} />
-              <span>
+              <span className="flex-1">
                 <b>{OBJECT_META.bottle.label}</b>：体力を +20% かいふく
               </span>
             </li>
-            <li>
+            <li className="flex items-center gap-2.5">
               <ObjectSprite kind="diaper" size={SPRITE_SIZE} />
-              <span>
+              <span className="flex-1">
                 <b>{OBJECT_META.diaper.label}</b>：おむつを 0% に リセット
               </span>
             </li>
@@ -111,7 +118,7 @@ export function HelpDialog({ onClose, panelRef }: HelpDialogProps) {
 
         <button
           type="button"
-          className="t-start ghost help-close"
+          className="t-start ghost mx-auto mt-1.5 block"
           onClick={onClose}
         >
           とじる

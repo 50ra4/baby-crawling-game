@@ -31,8 +31,10 @@ export function GameOverScreen({
     <div className="overlay over">
       <div className="o-over">ゲームオーバー</div>
       <div className="o-title">すやすや… おやすみなさい</div>
-      <div className="o-name">{displayName} は ねむっちゃった</div>
-      <div className="o-baby">
+      <div className="mb-0.5 text-[13px] font-bold text-[#c2c9ee]">
+        {displayName} は ねむっちゃった
+      </div>
+      <div className="relative my-1.5 flex h-[165px] w-[230px] items-center justify-center">
         <svg
           width="240"
           height="172"
@@ -43,7 +45,7 @@ export function GameOverScreen({
         </svg>
         <SleepingBaby size={236} t={time} />
       </div>
-      <div className="o-stats">
+      <div className="mt-2 mb-1 flex gap-3.5">
         <div className="o-stat">
           <span>こんかい</span>
           <b>
@@ -59,11 +61,17 @@ export function GameOverScreen({
           </b>
         </div>
       </div>
-      <div className="o-btns">
-        <button className="t-start" onClick={onRetry}>
+      <div className="mt-3.5 flex gap-3">
+        <button
+          className="t-start mt-0 px-[26px] py-[11px] text-[17px]"
+          onClick={onRetry}
+        >
           もういっかい
         </button>
-        <button className="t-start ghost" onClick={onTitle}>
+        <button
+          className="t-start ghost mt-0 px-[26px] py-[11px] text-[17px]"
+          onClick={onTitle}
+        >
           タイトル
         </button>
       </div>

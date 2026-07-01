@@ -43,7 +43,10 @@ export function Stage({
   }, []);
 
   return (
-    <div className="stage-wrap" ref={wrapRef}>
+    <div
+      className="fixed inset-0 flex items-center justify-center"
+      ref={wrapRef}
+    >
       <div
         className="stage"
         ref={stageRef}
