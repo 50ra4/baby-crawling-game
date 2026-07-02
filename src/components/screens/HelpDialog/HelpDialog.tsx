@@ -28,7 +28,7 @@ function ObjectChip({ kind }: { kind: ObjectKind }) {
   );
 }
 
-// あそびかた／ルール説明ダイアログ（操作・ステータス・スコア・障害物・アイテム）
+// あそびかた／ルール説明ダイアログ（操作・ステータス・スコア・おもちゃ・アイテム）
 export function HelpDialog({ onClose, panelRef }: HelpDialogProps) {
   return (
     <div className="help-backdrop" onClick={onClose}>
@@ -77,17 +77,7 @@ export function HelpDialog({ onClose, panelRef }: HelpDialogProps) {
           <h3>きをつけて</h3>
           <div className="mb-2 last:mb-0">
             <p>
-              <b>障害物</b>：ぶつかると 体力 -10「いたっ！」
-            </p>
-            <div className="mt-1.5 flex flex-wrap gap-3">
-              {KINDS.obstacle.map((kind) => (
-                <ObjectChip key={kind} kind={kind} />
-              ))}
-            </div>
-          </div>
-          <div className="mb-2 last:mb-0">
-            <p>
-              <b>おもちゃ</b>：さわると 体力 -10、でも
+              <b>おもちゃ</b>：さわると 体力 -8、でも
               あそんじゃう「遊んじゃった！」
             </p>
             <div className="mt-1.5 flex flex-wrap gap-3">

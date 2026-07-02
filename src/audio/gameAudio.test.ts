@@ -106,7 +106,7 @@ describe('gameAudio', () => {
     const audio = createGameAudio();
     audio.setSfx(false);
     audio.setSfx(true);
-    audio.sfx('obstacle');
+    audio.sfx('toy');
     expect(created.oscillators).toBeGreaterThan(0);
   });
 

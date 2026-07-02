@@ -45,12 +45,10 @@
 | -------------- | --------------- |
 | +体力          | `#37b24d`（緑） |
 | おむつ交換！   | `#2f86d6`（青） |
-| いたっ！       | `#e8503a`（赤） |
 | 遊んじゃった！ | `#e88b1a`（橙） |
 
 ### 2.4 接触バーストの影（`globals.css`）
 
-- hurt: `0 0 2px #e8503a, 0 3px 0 #c0392b, 0 0 14px #ff8a6a`（文字は白）
 - play: `0 0 2px #e88b1a, 0 3px 0 #c47512, 0 0 14px #ffc46a`（文字は白）
 
 ### 2.5 オーバーレイ・パネル
@@ -66,7 +64,6 @@
 
 ### 2.6 赤ちゃんフィルタ（`Baby.tsx`）
 
-- hurt: `drop-shadow(0 0 10px rgba(255,70,70,.95)) hue-rotate(-20deg) saturate(1.5)`
 - worried（不快度 ≥ 80%）: `saturate(.85) brightness(.96) hue-rotate(10deg) drop-shadow(0 1px 5px rgba(110,170,255,.85))`
 
 ## 3. タイポグラフィ
@@ -139,7 +136,7 @@
 ### あそびかたダイアログ（`HelpDialog`）
 
 - パネル最大幅 320px / 最大高 82% / padding 22px 20px、背景クリックで閉じる
-- セクション: そうさ / ステータス / スコア / きをつけて（障害物・おもちゃをスプライト付きで表示） / アイテム（哺乳瓶・オムツ）
+- セクション: そうさ / ステータス / スコア / きをつけて（おもちゃをスプライト付きで表示） / アイテム（哺乳瓶・オムツ）
 - ラベルは `OBJECT_META` から引いて表記ずれを防ぐ。スプライト表示サイズ 40px
 
 ## 5. レイアウト
@@ -158,14 +155,9 @@
 | ハイハイ diagonal（既定） | bob `−                                                                              | sin(phase·2π·2) | ·bounce`、sway `sin(phase·2π)·2px`、tilt `sin(phase·2π)·1.5°` |
 | ハイハイ bunny            | bob `−(hop^1.4)·bounce·2`（`hop = max(0, sin(phase·2π))`）                          |
 | ハイハイ wiggle           | bob `−                                                                              | sin·2           | ·bounce·0.5`、sway `sin·8px`、tilt `sin·5°`                   |
-| 接触 hurt: flash（既定）  | `translateX(sin(k·π·6)·6px)`                                                        |
-| 接触 hurt: tumble         | `rotate(sin(k·π·3)·22°)`                                                            |
-| 接触 hurt: squash         | `scale(1+(1−s)·0.4, s)`（`s = 1 − sin(k·π)·0.22`）                                  |
 | 接触 play: bounce（既定） | `translateY(−                                                                       | sin(k·π·3)      | ·16px)`                                                       |
 | 接触 play: sit            | `rotate(sin(k·π·4)·10°)`                                                            |
 | 接触 play: spin           | `rotate(k·360°)`                                                                    |
-| シェイク                  | `translate(±shakeIntensity·shake)`（強さ 8px / 0.3s 減衰）                          |
-| 点滅                      | 無敵中 hurt のみ 12Hz で opacity 0.35                                               |
 | 眠る呼吸                  | `translateY(sin(t·1.6)·0.9px)`                                                      |
 | ZZZ                       | 3 個が上昇（−56px/周期）＋拡大（14→26px）＋フェード、回転 12°+i·5°、色 `#8b9bd4`    |
 
@@ -196,7 +188,7 @@
 | `baby-play.png`                                     | 遊び接触中                     |
 | `baby-title.png`                                    | タイトルプレビュー             |
 | `baby-sleep.png`                                    | ゲームオーバー（眠る赤ちゃん） |
-| `ball.png` / `chair.png` / `teddy.png` / `duck.png` | おもちゃ・障害物               |
+| `ball.png` / `teddy.png` / `duck.png`               | おもちゃ                       |
 | `bottle.png` / `diaper.png`                         | 回復アイテム                   |
 
 `public/` に `favicon.png` / `apple-touch-icon.png` / `og-image.png`。

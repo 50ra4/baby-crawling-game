@@ -126,13 +126,6 @@
     white-space: nowrap;
     animation: burst 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) both;
   }
-  .contact-burst.hurt {
-    color: #fff;
-    text-shadow:
-      0 0 2px #e8503a,
-      0 3px 0 #c0392b,
-      0 0 14px #ff8a6a;
-  }
   .contact-burst.play {
     color: #fff;
     text-shadow:

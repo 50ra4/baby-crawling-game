@@ -28,7 +28,6 @@ export const laneX = (lane: number): number =>
 export const OBJECT_META = {
   bottle: { label: '哺乳瓶', category: 'item', dynamic: false, base: 54 },
   diaper: { label: 'オムツ', category: 'item', dynamic: false, base: 54 },
-  chair: { label: '椅子', category: 'obstacle', dynamic: false, base: 76 },
   ball: { label: 'ボール', category: 'toy', dynamic: true, base: 54 },
   teddy: { label: 'テディベア', category: 'toy', dynamic: false, base: 76 },
   duck: {
@@ -39,9 +38,8 @@ export const OBJECT_META = {
   },
 } as const satisfies Record<ObjectKind, ObjectMeta>;
 
-// カテゴリごとのkind一覧。スポーン時の抽選に使う。
+// カテゴリごとのkind一覧。おもちゃはスポーン時の抽選に使う。
 export const KINDS = {
-  obstacle: ['chair'],
   toy: ['ball', 'teddy', 'duck'],
   item: ['bottle', 'diaper'],
 } as const satisfies Record<ObjectCategory, ObjectKind[]>;
@@ -51,27 +49,24 @@ export const DEFAULT_CONFIG: GameConfig = {
   scrollSpeed: 200,
   babyMoveSpeed: 293,
   babyAccel: 1500,
-  spawnInterval: 0.75,
-  obstacleRate: 45,
-  toyRate: 30,
-  itemRate: 25,
-  bottleShare: 60,
+  // おもちゃは唯一の接触ハザード。椅子廃止分を補い ~0.83体/s の頻度にする。
+  toyInterval: 1.2,
+  // 哺乳瓶は確実に供給し RNG 枯渇による理不尽を防ぐ（+20%回復を約4.5秒ごと）。
+  bottleInterval: 4.5,
+  // オムツは約7秒ごと。逃すと不快度が溜まる緊張感を残す。
+  diaperInterval: 7.0,
   staminaStart: 100,
   drainPerSec: 2,
-  obstacleDamage: 10,
-  toyDamage: 10,
+  toyDamage: 8,
   bottleHealPct: 20,
   discomfortThreshold: 80,
   drainMultiplier: 2,
   invincibleTime: 1.0,
   contactTime: 0.6,
   crawlStyle: 'diagonal',
-  hurtStyle: 'flash',
   playStyle: 'bounce',
   crawlCyclesPerSec: 2.2,
   bounceHeight: 3.5,
-  shakeIntensity: 8,
-  shakeDuration: 0.3,
   theme: 'room',
   sfxOn: true,
   bgmOn: false,

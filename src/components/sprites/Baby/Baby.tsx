@@ -8,21 +8,12 @@ const TAU = Math.PI * 2;
 // 不快度がこの値以上で「困り顔＋汗」相当の表情に切り替える（SPEC_confirmed.md 準拠）
 const WORRIED_MOOD = 0.8;
 
-const HURT_FILTER =
-  'drop-shadow(0 0 10px rgba(255,70,70,.95)) hue-rotate(-20deg) saturate(1.5)';
 // 静止画では表情を差し替えられないため、青ざめ＋汗の滲みをフィルタで表現する
 const WORRIED_FILTER =
   'saturate(.85) brightness(.96) hue-rotate(10deg) drop-shadow(0 1px 5px rgba(110,170,255,.85))';
 
-const moodFilter = (hurt: boolean, worried: boolean): string => {
-  if (hurt) {
-    return HURT_FILTER;
-  }
-  if (worried) {
-    return WORRIED_FILTER;
-  }
-  return 'none';
-};
+const moodFilter = (worried: boolean): string =>
+  worried ? WORRIED_FILTER : 'none';
 
 const babySrc = (variant: 'game' | 'title', play: boolean): string => {
   if (variant === 'title') {
@@ -39,7 +30,6 @@ type BabyProps = {
   crawlStyle?: CrawlStyle;
   bounce?: number;
   mood?: number;
-  hurt?: boolean;
   play?: boolean;
   size?: number;
   variant?: 'game' | 'title';
@@ -80,7 +70,6 @@ export function Baby({
   crawlStyle = 'diagonal',
   bounce = 7,
   mood = 0,
-  hurt = false,
   play = false,
   size = 120,
   variant = 'game',
@@ -112,7 +101,7 @@ export function Baby({
         // ドラッグ操作を Stage に通すため画像をヒットテストから除外する
         pointerEvents: 'none',
         transform: `translate(${sway}px, ${bob}px) rotate(${tilt}deg)`,
-        filter: moodFilter(hurt, worried),
+        filter: moodFilter(worried),
       }}
     />
   );

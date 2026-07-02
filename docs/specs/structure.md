@@ -71,9 +71,8 @@ baby-crawling-game/
 | `contact.ts`         | 接触フリーズ状態の進行・解除                                     |
 | `movement.ts`        | 赤ちゃん横移動（加減速イージング）・オブジェクト移動と画面外除去 |
 | `stamina.ts`         | 体力消費・不快度上昇（時間ベース、消費倍率判定）                 |
-| `spawnObject.ts`     | カテゴリ/種別/レーン抽選とオブジェクト生成                       |
-| `collision.ts`       | 当たり判定と回復・被弾効果の適用、副作用イベント生成             |
-| `shake.ts`           | シェイク量の減衰                                                 |
+| `spawnObject.ts`     | おもちゃ種別・レーン抽選とオブジェクト生成                       |
+| `collision.ts`       | 当たり判定と回復・遊び効果の適用、副作用イベント生成             |
 | `popups.ts`          | ポップテキストの追加・寿命更新                                   |
 
 各ファイルに `*.test.ts` を同梱。総合シナリオは `gameSimulation.test.ts`。
@@ -88,7 +87,6 @@ main.tsx
                │                          ├─ stamina
                │                          ├─ spawnObject
                │                          ├─ collision ─▶ GameEvent[]
-               │                          ├─ shake
                │                          └─ popups
                ├─ handleEvents ─▶ gameAudio / saveBest / setScreen
                ├─ Stage ─ Playfield ─ {backgrounds, sprites, Hud, PopupText, ContactBurst}

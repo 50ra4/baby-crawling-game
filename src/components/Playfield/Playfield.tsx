@@ -18,7 +18,6 @@ import { PopupText } from '../PopupText/PopupText';
 import { Hud } from '../hud/Hud/Hud';
 import { babyContactTransform } from './babyContactTransform';
 
-const BLINK_RATE = 12;
 const MAX_TILT = 22;
 
 type PlayfieldProps = {
@@ -35,23 +34,10 @@ export function Playfield({
   screen,
   bestDistance,
 }: PlayfieldProps) {
-  // 被弾(hurt)無敵中のみ点滅。おもちゃ(play)では点滅しない。
-  const blinking =
-    game.invincibleType === 'hurt' &&
-    game.elapsed < game.invincibleUntil &&
-    Math.floor(game.elapsed * BLINK_RATE) % 2 === 0;
-
-  const shakeAmount = game.shake > 0 ? config.shakeIntensity * game.shake : 0;
-  const shakeX = shakeAmount > 0 ? (Math.random() - 0.5) * 2 * shakeAmount : 0;
-  const shakeY = shakeAmount > 0 ? (Math.random() - 0.5) * 2 * shakeAmount : 0;
-
   const distance = Math.floor(game.distancePx / PX_PER_M);
 
   return (
-    <div
-      className="absolute inset-0 overflow-hidden"
-      style={{ transform: `translate(${shakeX}px, ${shakeY}px)` }}
-    >
+    <div className="absolute inset-0 overflow-hidden">
       <div
         className="absolute inset-0"
         style={backgroundStyle(config.theme, game.distancePx)}
@@ -90,7 +76,6 @@ export function Playfield({
           top: BABY_Y,
           width: BABY_WIDTH,
           height: BABY_WIDTH * 1.18,
-          opacity: blinking ? 0.35 : 1,
           transform: `translate(-50%,-58%) ${babyContactTransform(game.contact, config)}`,
         }}
       >
@@ -99,7 +84,6 @@ export function Playfield({
           crawlStyle={config.crawlStyle}
           bounce={config.bounceHeight}
           mood={game.discomfort / 100}
-          hurt={game.contact?.type === 'hurt'}
           play={game.contact?.type === 'play'}
           size={BABY_WIDTH}
         />

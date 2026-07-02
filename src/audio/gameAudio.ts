@@ -109,10 +109,6 @@ export const createGameAudio = () => {
       tone(300, t, 0.12, { type: 'sine', gain: 0.18, glideTo: 180 });
       noiseBurst(t, 0.12, 0.08);
     },
-    obstacle() {
-      const t = ctx!.currentTime;
-      tone(180, t, 0.22, { type: 'sawtooth', gain: 0.22, glideTo: 90 });
-    },
     toy() {
       const t = ctx!.currentTime;
       [659.25, 880].forEach((f, i) =>

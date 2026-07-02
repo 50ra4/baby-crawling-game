@@ -15,7 +15,7 @@ const stateWith = (
     objects: [
       {
         id: 1,
-        kind: 'chair',
+        kind: 'teddy',
         x: base.babyX,
         y: BABY_Y,
         hit: false,
@@ -50,29 +50,17 @@ describe('checkCollisions', () => {
     expect(events).toContainEqual({ type: 'sfx', name: 'diaper' });
   });
 
-  it('障害物に当たると体力が減り被弾接触になる', () => {
-    const state = stateWith({ kind: 'chair' }, { stamina: 100 });
-    const { state: next, events } = checkCollisions(state, DEFAULT_CONFIG);
-    expect(next.stamina).toBe(100 - DEFAULT_CONFIG.obstacleDamage);
-    expect(next.invincibleType).toBe('hurt');
-    expect(next.contact?.type).toBe('hurt');
-    expect(next.shake).toBe(1);
-    expect(events).toContainEqual({ type: 'sfx', name: 'obstacle' });
-  });
-
-  it('おもちゃに当たると体力が減り遊ぶ接触になる（点滅しない）', () => {
+  it('おもちゃに当たると体力が減り遊ぶ接触になる', () => {
     const state = stateWith({ kind: 'ball' }, { stamina: 100 });
     const { state: next, events } = checkCollisions(state, DEFAULT_CONFIG);
     expect(next.stamina).toBe(100 - DEFAULT_CONFIG.toyDamage);
-    expect(next.invincibleType).toBe('play');
     expect(next.contact?.type).toBe('play');
-    expect(next.shake).toBe(0);
     expect(events).toContainEqual({ type: 'sfx', name: 'toy' });
   });
 
-  it('無敵時間中は障害物・おもちゃの衝突を無視する', () => {
+  it('無敵時間中はおもちゃの衝突を無視する', () => {
     const state = stateWith(
-      { kind: 'chair' },
+      { kind: 'ball' },
       { stamina: 100, elapsed: 0.5, invincibleUntil: 1.0 },
     );
     const { state: next, events } = checkCollisions(state, DEFAULT_CONFIG);
@@ -91,19 +79,19 @@ describe('checkCollisions', () => {
   });
 
   it('離れたオブジェクトとは衝突しない', () => {
-    const state = stateWith({ kind: 'chair', x: 0, y: 0 }, { stamina: 100 });
+    const state = stateWith({ kind: 'teddy', x: 0, y: 0 }, { stamina: 100 });
     const { state: next, events } = checkCollisions(state, DEFAULT_CONFIG);
     expect(next.stamina).toBe(100);
     expect(events).toHaveLength(0);
   });
 
   it('すでにヒット済みのオブジェクトは再処理しない', () => {
-    const state = stateWith({ kind: 'chair', hit: true }, { stamina: 100 });
+    const state = stateWith({ kind: 'teddy', hit: true }, { stamina: 100 });
     const { state: next } = checkCollisions(state, DEFAULT_CONFIG);
     expect(next.stamina).toBe(100);
   });
 
-  it('被弾後は同フレームの2体目の障害物を無敵で無視する', () => {
+  it('遊んだ後は同フレームの2体目のおもちゃを無敵で無視する', () => {
     const base = createGameState(DEFAULT_CONFIG);
     const state: GameState = {
       ...base,
@@ -112,7 +100,7 @@ describe('checkCollisions', () => {
       objects: [
         {
           id: 1,
-          kind: 'chair',
+          kind: 'teddy',
           x: base.babyX,
           y: BABY_Y,
           hit: false,
@@ -121,7 +109,7 @@ describe('checkCollisions', () => {
         },
         {
           id: 2,
-          kind: 'chair',
+          kind: 'teddy',
           x: base.babyX,
           y: BABY_Y,
           hit: false,
@@ -131,7 +119,7 @@ describe('checkCollisions', () => {
       ],
     };
     const { state: next } = checkCollisions(state, DEFAULT_CONFIG);
-    expect(next.stamina).toBe(100 - DEFAULT_CONFIG.obstacleDamage);
+    expect(next.stamina).toBe(100 - DEFAULT_CONFIG.toyDamage);
     expect(next.objects.at(1)?.hit).toBe(false);
   });
 });
