@@ -77,6 +77,11 @@
     background: #cfe;
     touch-action: none;
     cursor: default;
+    /* ドラッグ操作(赤ちゃんの移動)でオブジェクト・テキストが選択され、
+       青いハイライトが出るのを防ぐ。子要素は user-select を継承する。 */
+    user-select: none;
+    -webkit-user-select: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS 長押しの保存/コールアウトを抑止 */
   }
   .runner {
     position: absolute;
