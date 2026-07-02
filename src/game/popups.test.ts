@@ -30,12 +30,12 @@ describe('updatePopups', () => {
 
 describe('addPopup', () => {
   it('新しいポップアップを末尾に追加する', () => {
-    const result = addPopup([], 5, 'いたっ！', '#e8503a', 50, 60);
+    const result = addPopup([], 5, '遊んじゃった！', '#e88b1a', 50, 60);
     expect(result).toHaveLength(1);
     expect(result.at(0)).toMatchObject({
       id: 5,
-      text: 'いたっ！',
-      color: '#e8503a',
+      text: '遊んじゃった！',
+      color: '#e88b1a',
       x: 50,
       y: 60,
       t: 0,

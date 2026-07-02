@@ -1,22 +1,14 @@
 // ゲーム全体で使う型定義。手書き型は最小限にし、リテラルユニオンを活用する。
 
-export type ObjectKind =
-  | 'chair'
-  | 'ball'
-  | 'teddy'
-  | 'duck'
-  | 'bottle'
-  | 'diaper';
+export type ObjectKind = 'ball' | 'teddy' | 'duck' | 'bottle' | 'diaper';
 
-export type ObjectCategory = 'obstacle' | 'toy' | 'item';
+export type ObjectCategory = 'toy' | 'item';
 
 export type GameScreen = 'title' | 'playing' | 'over';
 
-export type ContactType = 'hurt' | 'play';
+export type ContactType = 'play';
 
 export type CrawlStyle = 'diagonal' | 'bunny' | 'wiggle';
-
-export type HurtStyle = 'flash' | 'tumble' | 'squash';
 
 export type PlayStyle = 'sit' | 'bounce' | 'spin';
 
@@ -25,13 +17,7 @@ export type Theme = 'room' | 'park' | 'night';
 // 赤ちゃんの性別。表示名の敬称（くん/ちゃん）に対応する。
 export type Gender = 'boy' | 'girl';
 
-export type SfxName =
-  | 'bottle'
-  | 'diaper'
-  | 'obstacle'
-  | 'toy'
-  | 'start'
-  | 'gameover';
+export type SfxName = 'bottle' | 'diaper' | 'toy' | 'start' | 'gameover';
 
 export type ObjectMeta = {
   label: string;
@@ -40,7 +26,7 @@ export type ObjectMeta = {
   base: number;
 };
 
-// 画面上に存在する1つのオブジェクト（障害物・おもちゃ・回復アイテム）
+// 画面上に存在する1つのオブジェクト（おもちゃ・回復アイテム）
 export type GameObject = {
   id: number;
   kind: ObjectKind;
@@ -86,14 +72,11 @@ export type GameConfig = {
   scrollSpeed: number;
   babyMoveSpeed: number;
   babyAccel: number;
-  spawnInterval: number;
-  obstacleRate: number;
-  toyRate: number;
-  itemRate: number;
-  bottleShare: number;
+  toyInterval: number;
+  bottleInterval: number;
+  diaperInterval: number;
   staminaStart: number;
   drainPerSec: number;
-  obstacleDamage: number;
   toyDamage: number;
   bottleHealPct: number;
   discomfortThreshold: number;
@@ -101,12 +84,9 @@ export type GameConfig = {
   invincibleTime: number;
   contactTime: number;
   crawlStyle: CrawlStyle;
-  hurtStyle: HurtStyle;
   playStyle: PlayStyle;
   crawlCyclesPerSec: number;
   bounceHeight: number;
-  shakeIntensity: number;
-  shakeDuration: number;
   theme: Theme;
   sfxOn: boolean;
   bgmOn: boolean;
@@ -125,12 +105,12 @@ export type GameState = {
   score: number;
   objects: GameObject[];
   nextId: number;
-  spawnAcc: number;
+  toySpawnAcc: number;
+  bottleAcc: number;
+  diaperAcc: number;
   phase: number;
   contact: Contact | null;
   invincibleUntil: number;
-  invincibleType: ContactType | null;
-  shake: number;
   popups: Popup[];
   popId: number;
   elapsed: number;

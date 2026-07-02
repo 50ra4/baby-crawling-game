@@ -3,18 +3,17 @@ import { vi } from 'vitest';
 import { HelpDialog } from './HelpDialog';
 
 describe('HelpDialog', () => {
-  it('見出しと操作・ステータス・スコア・障害物・アイテムの説明を表示する', () => {
+  it('見出しと操作・ステータス・スコア・おもちゃ・アイテムの説明を表示する', () => {
     const { getByText, container } = render(<HelpDialog onClose={() => {}} />);
     expect(getByText('あそびかた')).toBeInTheDocument();
     const text = container.textContent ?? '';
     expect(text).toContain('体力');
     expect(text).toContain('おむつ');
     expect(text).toContain('きょり');
-    expect(text).toContain('椅子');
     expect(text).toContain('ボール');
     expect(text).toContain('哺乳瓶');
     expect(text).toContain('オムツ');
-    expect(text).toContain('-10');
+    expect(text).toContain('-8');
     expect(text).toContain('+20%');
   });
 
@@ -26,10 +25,10 @@ describe('HelpDialog', () => {
     ).toBeInTheDocument();
   });
 
-  it('障害物・おもちゃ・アイテムをそれぞれ画像つきで表示する', () => {
+  it('おもちゃ・アイテムをそれぞれ画像つきで表示する', () => {
     const { container } = render(<HelpDialog onClose={() => {}} />);
-    // 椅子・ボール・テディベア・アヒル・哺乳瓶・オムツの6種ぶんのスプライト画像
-    expect(container.querySelectorAll('img')).toHaveLength(6);
+    // ボール・テディベア・アヒル・哺乳瓶・オムツの5種ぶんのスプライト画像
+    expect(container.querySelectorAll('img')).toHaveLength(5);
   });
 
   it('「とじる」でonCloseが呼ばれる', () => {

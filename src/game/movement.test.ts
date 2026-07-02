@@ -10,7 +10,7 @@ const noInput: InputState = {
 
 const makeObject = (overrides: Partial<GameObject> = {}): GameObject => ({
   id: 1,
-  kind: 'chair',
+  kind: 'teddy',
   x: 180,
   y: 100,
   hit: false,
@@ -182,7 +182,7 @@ describe('moveBaby', () => {
 describe('moveObjects', () => {
   it('静的オブジェクトは scrollSpeed×dt 分だけ下降する', () => {
     const result = moveObjects(
-      [makeObject({ kind: 'chair', y: 100 })],
+      [makeObject({ kind: 'teddy', y: 100 })],
       0.1,
       DEFAULT_CONFIG,
     );

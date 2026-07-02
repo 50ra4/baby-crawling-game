@@ -1,5 +1,4 @@
 import type {
-  ContactType,
   GameConfig,
   GameEvent,
   GameState,
@@ -13,7 +12,6 @@ import { addPopup } from './popups';
 const POP_COLOR = {
   heal: '#37b24d',
   diaper: '#2f86d6',
-  hurt: '#e8503a',
   play: '#e88b1a',
 } as const;
 
@@ -33,8 +31,6 @@ export const checkCollisions = (
   let discomfort = state.discomfort;
   let contact = state.contact;
   let invincibleUntil = state.invincibleUntil;
-  let invincibleType: ContactType | null = state.invincibleType;
-  let shake = state.shake;
   let popId = state.popId;
   let popups: Popup[] = state.popups;
 
@@ -82,40 +78,23 @@ export const checkCollisions = (
       return { ...object, hit: true };
     }
 
-    // 障害物・おもちゃは無敵時間中なら無視
+    // おもちゃは無敵時間中なら無視
     if (state.elapsed <= invincibleUntil) {
       return object;
     }
 
     invincibleUntil = state.elapsed + config.invincibleTime;
-    if (meta.category === 'obstacle') {
-      stamina -= config.obstacleDamage;
-      invincibleType = 'hurt';
-      contact = { type: 'hurt', t: 0, dur: config.contactTime };
-      shake = 1;
-      popups = addPopup(
-        popups,
-        popId++,
-        'いたっ！',
-        POP_COLOR.hurt,
-        object.x,
-        object.y,
-      );
-      events.push({ type: 'sfx', name: 'obstacle' });
-    } else {
-      stamina -= config.toyDamage;
-      invincibleType = 'play';
-      contact = { type: 'play', t: 0, dur: config.contactTime };
-      popups = addPopup(
-        popups,
-        popId++,
-        '遊んじゃった！',
-        POP_COLOR.play,
-        object.x,
-        object.y,
-      );
-      events.push({ type: 'sfx', name: 'toy' });
-    }
+    stamina -= config.toyDamage;
+    contact = { type: 'play', t: 0, dur: config.contactTime };
+    popups = addPopup(
+      popups,
+      popId++,
+      '遊んじゃった！',
+      POP_COLOR.play,
+      object.x,
+      object.y,
+    );
+    events.push({ type: 'sfx', name: 'toy' });
     return { ...object, hit: true };
   });
 
@@ -126,8 +105,6 @@ export const checkCollisions = (
       discomfort,
       contact,
       invincibleUntil,
-      invincibleType,
-      shake,
       popups,
       popId,
       objects,

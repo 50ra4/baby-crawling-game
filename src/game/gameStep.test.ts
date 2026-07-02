@@ -1,7 +1,12 @@
 import { afterEach, vi } from 'vitest';
 import { stepGame } from './gameStep';
 import { createGameState } from './createGameState';
-import { BABY_Y, DEFAULT_CONFIG, PX_PER_M } from '../constants/gameConfig';
+import {
+  BABY_Y,
+  DEFAULT_CONFIG,
+  OBJECT_META,
+  PX_PER_M,
+} from '../constants/gameConfig';
 import type { GameObject, InputState } from '../types/game';
 
 const noInput: InputState = {
@@ -94,7 +99,7 @@ describe('stepGame（通常時）', () => {
 describe('stepGame（接触フリーズ中）', () => {
   const frozenState = () => ({
     ...createGameState(DEFAULT_CONFIG),
-    contact: { type: 'hurt' as const, t: 0, dur: 0.6 },
+    contact: { type: 'play' as const, t: 0, dur: 0.6 },
   });
 
   // 赤ちゃん(babyX, BABY_Y)に重なるオブジェクトを1体置く
@@ -124,7 +129,12 @@ describe('stepGame（接触フリーズ中）', () => {
   });
 
   it('スポーンが起きない', () => {
-    const base = { ...frozenState(), spawnAcc: 10 };
+    const base = {
+      ...frozenState(),
+      toySpawnAcc: 10,
+      bottleAcc: 10,
+      diaperAcc: 10,
+    };
     const { state } = stepGame(base, 0.1, DEFAULT_CONFIG, noInput);
     expect(state.objects).toHaveLength(0);
   });
@@ -175,14 +185,52 @@ describe('stepGame（接触フリーズ中）', () => {
 });
 
 describe('stepGame（スポーン）', () => {
-  it('spawnInterval を超えるとオブジェクトが1体生成される', () => {
+  it('toyInterval を超えるとおもちゃが1体生成される', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
     const base = {
       ...createGameState(DEFAULT_CONFIG),
-      spawnAcc: DEFAULT_CONFIG.spawnInterval,
+      toySpawnAcc: DEFAULT_CONFIG.toyInterval,
     };
     const { state } = stepGame(base, 0.05, DEFAULT_CONFIG, noInput);
     expect(state.objects).toHaveLength(1);
+    expect(OBJECT_META[state.objects.at(0)!.kind].category).toBe('toy');
+  });
+
+  it('bottleInterval を超えると哺乳瓶が確実に1体生成される', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const base = {
+      ...createGameState(DEFAULT_CONFIG),
+      bottleAcc: DEFAULT_CONFIG.bottleInterval,
+    };
+    const { state } = stepGame(base, 0.05, DEFAULT_CONFIG, noInput);
+    expect(state.objects).toHaveLength(1);
+    expect(state.objects.at(0)?.kind).toBe('bottle');
+  });
+
+  it('diaperInterval を超えるとオムツが確実に1体生成される', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const base = {
+      ...createGameState(DEFAULT_CONFIG),
+      diaperAcc: DEFAULT_CONFIG.diaperInterval,
+    };
+    const { state } = stepGame(base, 0.05, DEFAULT_CONFIG, noInput);
+    expect(state.objects).toHaveLength(1);
+    expect(state.objects.at(0)?.kind).toBe('diaper');
+  });
+
+  it('複数の間隔が同時に到達すると各種類が1体ずつ出る', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const base = {
+      ...createGameState(DEFAULT_CONFIG),
+      toySpawnAcc: DEFAULT_CONFIG.toyInterval,
+      bottleAcc: DEFAULT_CONFIG.bottleInterval,
+      diaperAcc: DEFAULT_CONFIG.diaperInterval,
+    };
+    const { state } = stepGame(base, 0.05, DEFAULT_CONFIG, noInput);
+    expect(state.objects).toHaveLength(3);
+    const kinds = state.objects.map((object) => object.kind);
+    expect(kinds).toContain('bottle');
+    expect(kinds).toContain('diaper');
   });
 });
 

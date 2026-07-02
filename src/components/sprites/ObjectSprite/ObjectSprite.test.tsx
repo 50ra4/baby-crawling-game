@@ -8,8 +8,8 @@ describe('ObjectSprite', () => {
     expect(img).not.toBeNull();
   });
 
-  it('椅子のkindでimg要素を描画する', () => {
-    const { container } = render(<ObjectSprite kind="chair" size={76} />);
+  it('テディベアのkindでimg要素を描画する', () => {
+    const { container } = render(<ObjectSprite kind="teddy" size={76} />);
     const img = container.querySelector('img');
     expect(img).not.toBeNull();
   });
@@ -33,15 +33,8 @@ describe('ObjectSprite', () => {
     expect(img?.style.pointerEvents).toBe('none');
   });
 
-  it('全6種類が描画できる', () => {
-    const kinds = [
-      'bottle',
-      'diaper',
-      'chair',
-      'ball',
-      'teddy',
-      'duck',
-    ] as const;
+  it('全5種類が描画できる', () => {
+    const kinds = ['bottle', 'diaper', 'ball', 'teddy', 'duck'] as const;
     kinds.forEach((kind) => {
       const { container } = render(<ObjectSprite kind={kind} size={50} />);
       expect(container.querySelector('img')).not.toBeNull();

@@ -1,7 +1,6 @@
 import type { ContactType } from '../../types/game';
 
 const BURST_TEXT: Record<ContactType, string> = {
-  hurt: 'いたっ！',
   play: 'わーい！',
 };
 

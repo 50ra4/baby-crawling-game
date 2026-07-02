@@ -9,9 +9,8 @@ import { PX_PER_M } from '../constants/gameConfig';
 import { updateContact } from './contact';
 import { moveBaby, moveObjects } from './movement';
 import { nextDiscomfort, nextStamina } from './stamina';
-import { spawnObject } from './spawnObject';
+import { pickToyKind, spawnObject } from './spawnObject';
 import { checkCollisions } from './collision';
-import { nextShake } from './shake';
 import { updatePopups } from './popups';
 
 // ハイハイ位相の基準スクロール速度（位相はスクロール速度に比例する）
@@ -60,12 +59,28 @@ export const stepGame = (
     const score = Math.floor(distancePx / PX_PER_M);
 
     let objects = moveObjects(working.objects, dt, config);
-
-    let spawnAcc = working.spawnAcc + dt;
     let nextId = working.nextId;
-    if (spawnAcc >= config.spawnInterval) {
-      spawnAcc -= config.spawnInterval;
-      objects = [...objects, spawnObject(nextId, config)];
+
+    // おもちゃ・哺乳瓶・オムツはそれぞれ独立した固定間隔で出現させる。
+    // 哺乳瓶/オムツは種類を固定し確実に供給、おもちゃのみ種類を抽選する。
+    let toySpawnAcc = working.toySpawnAcc + dt;
+    if (toySpawnAcc >= config.toyInterval) {
+      toySpawnAcc -= config.toyInterval;
+      objects = [...objects, spawnObject(nextId, pickToyKind(), config)];
+      nextId += 1;
+    }
+
+    let bottleAcc = working.bottleAcc + dt;
+    if (bottleAcc >= config.bottleInterval) {
+      bottleAcc -= config.bottleInterval;
+      objects = [...objects, spawnObject(nextId, 'bottle', config)];
+      nextId += 1;
+    }
+
+    let diaperAcc = working.diaperAcc + dt;
+    if (diaperAcc >= config.diaperInterval) {
+      diaperAcc -= config.diaperInterval;
+      objects = [...objects, spawnObject(nextId, 'diaper', config)];
       nextId += 1;
     }
 
@@ -74,7 +89,9 @@ export const stepGame = (
       distancePx,
       score,
       objects,
-      spawnAcc,
+      toySpawnAcc,
+      bottleAcc,
+      diaperAcc,
       nextId,
     };
   }
@@ -92,9 +109,8 @@ export const stepGame = (
   working = collision.state;
   events.push(...collision.events);
 
-  const shake = nextShake(working.shake, dt, config.shakeDuration);
   const popups = updatePopups(working.popups, dt);
-  working = { ...working, shake, popups };
+  working = { ...working, popups };
 
   if (working.stamina <= 0 && !working.over) {
     const dist = Math.floor(working.distancePx / PX_PER_M);

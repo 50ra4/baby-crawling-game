@@ -26,7 +26,13 @@ describe('createGameState', () => {
     expect(state.objects).toEqual([]);
     expect(state.popups).toEqual([]);
     expect(state.contact).toBeNull();
-    expect(state.invincibleType).toBeNull();
+  });
+
+  it('スポーンアキュムレータが全て0から始まる', () => {
+    const state = createGameState(DEFAULT_CONFIG);
+    expect(state.toySpawnAcc).toBe(0);
+    expect(state.bottleAcc).toBe(0);
+    expect(state.diaperAcc).toBe(0);
   });
 
   it('ゲームオーバーフラグが立っていない', () => {

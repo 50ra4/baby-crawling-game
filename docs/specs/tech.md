@@ -73,7 +73,7 @@
   - 消費側は `App.handleEvents`。`sfx` は `gameAudio.sfx(name)`、`gameover` はベスト更新＋画面遷移
 - **入力契約** `InputState = { left: boolean; right: boolean; targetX: number | null }`
   - `targetX` はタップ/ドラッグの論理 X 目標。キー操作時は `null` にクリア
-- **型境界**: `GameConfig`（バランス調整値）・`GameState`（毎フレーム可変）・`ObjectKind`/`ObjectCategory`/`GameScreen`/`ContactType`/`CrawlStyle`/`HurtStyle`/`PlayStyle`/`Theme`/`Gender` などリテラルユニオンで分岐の網羅性を担保
+- **型境界**: `GameConfig`（バランス調整値）・`GameState`（毎フレーム可変）・`ObjectKind`/`ObjectCategory`/`GameScreen`/`ContactType`/`CrawlStyle`/`PlayStyle`/`Theme`/`Gender` などリテラルユニオンで分岐の網羅性を担保
 - **オーディオ契約** `gameAudio`（`createGameAudio`）: `init()` / `setSfx(on)` / `setBgm(on)` / `sfx(name)` を公開するシングルトン
 
 ### B. 外部依存契約

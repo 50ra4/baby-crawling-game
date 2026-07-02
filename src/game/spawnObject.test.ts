@@ -1,5 +1,5 @@
 import { afterEach, vi } from 'vitest';
-import { spawnObject } from './spawnObject';
+import { pickToyKind, spawnObject } from './spawnObject';
 import { DEFAULT_CONFIG } from '../constants/gameConfig';
 
 // Math.random の戻り値を順番に固定する
@@ -13,56 +13,65 @@ afterEach(() => {
 });
 
 describe('spawnObject', () => {
-  it('カテゴリ抽選が障害物の範囲だと椅子を生成する', () => {
-    // [カテゴリroll=0→obstacle, kind index=0→chair, lane=0]
-    mockRandomSequence([0, 0, 0]);
-    const object = spawnObject(7, DEFAULT_CONFIG);
-    expect(object.kind).toBe('chair');
+  it('指定したkind(哺乳瓶)をそのまま生成する', () => {
+    // [lane=0]
+    mockRandomSequence([0]);
+    const object = spawnObject(7, 'bottle', DEFAULT_CONFIG);
+    expect(object.kind).toBe('bottle');
     expect(object.id).toBe(7);
   });
 
-  it('カテゴリ抽選がアイテムの範囲かつ哺乳瓶の割合内だと哺乳瓶を生成する', () => {
-    // [カテゴリroll=0.8→item, 哺乳瓶roll=0.5(<0.6)→bottle, lane=0.4→レーン2]
-    mockRandomSequence([0.8, 0.5, 0.4]);
-    const object = spawnObject(1, DEFAULT_CONFIG);
-    expect(object.kind).toBe('bottle');
-    expect(object.x).toBe(180);
-  });
-
-  it('哺乳瓶の割合を超えるとオムツを生成する', () => {
-    // [item, 哺乳瓶roll=0.7(>=0.6)→diaper, lane=0]
-    mockRandomSequence([0.8, 0.7, 0]);
-    const object = spawnObject(1, DEFAULT_CONFIG);
+  it('指定したkind(オムツ)をそのまま生成する', () => {
+    mockRandomSequence([0]);
+    const object = spawnObject(1, 'diaper', DEFAULT_CONFIG);
     expect(object.kind).toBe('diaper');
   });
 
   it('生成位置は画面上端の外(y=-44)で未ヒット状態である', () => {
-    mockRandomSequence([0, 0, 0]);
-    const object = spawnObject(1, DEFAULT_CONFIG);
+    mockRandomSequence([0]);
+    const object = spawnObject(1, 'teddy', DEFAULT_CONFIG);
     expect(object.y).toBe(-44);
     expect(object.hit).toBe(false);
     expect(object.scale).toBe(1);
   });
 
   it('動的オブジェクト(ボール)には斜め移動の初速vxが付く', () => {
-    // [カテゴリroll=0.5→toy, kind index=0→ball, lane=0, 方向roll=0→左(-1), 速度roll=0→0.28]
-    mockRandomSequence([0.5, 0, 0, 0, 0]);
-    const object = spawnObject(1, DEFAULT_CONFIG);
-    expect(object.kind).toBe('ball');
+    // [lane=0, 方向roll=0→左(-1), 速度roll=0→0.28]
+    mockRandomSequence([0, 0, 0]);
+    const object = spawnObject(1, 'ball', DEFAULT_CONFIG);
     expect(object.vx).toBeCloseTo(-1 * DEFAULT_CONFIG.scrollSpeed * 0.28);
   });
 
   it('静的オブジェクトのvxは0である', () => {
-    // [カテゴリroll=0.5→toy, kind index=0.4→teddy(index1), lane=0]
-    mockRandomSequence([0.5, 0.4, 0]);
-    const object = spawnObject(1, DEFAULT_CONFIG);
-    expect(object.kind).toBe('teddy');
+    // [lane=0]
+    mockRandomSequence([0]);
+    const object = spawnObject(1, 'teddy', DEFAULT_CONFIG);
     expect(object.vx).toBe(0);
   });
 
   it('レーンは0〜4のいずれかの論理X座標に収まる', () => {
-    mockRandomSequence([0, 0, 0.99]);
-    const object = spawnObject(1, DEFAULT_CONFIG);
+    // [lane=0.99→レーン4(x=312)]
+    mockRandomSequence([0.99]);
+    const object = spawnObject(1, 'bottle', DEFAULT_CONFIG);
     expect(object.x).toBe(312);
+  });
+});
+
+describe('pickToyKind', () => {
+  it('抽選値が先頭ならボールを返す', () => {
+    mockRandomSequence([0]);
+    expect(pickToyKind()).toBe('ball');
+  });
+
+  it('抽選値が中間ならテディベアを返す', () => {
+    // index=Math.floor(0.4*3)=1→teddy
+    mockRandomSequence([0.4]);
+    expect(pickToyKind()).toBe('teddy');
+  });
+
+  it('抽選値が末尾ならアヒルを返す', () => {
+    // index=Math.floor(0.99*3)=2→duck
+    mockRandomSequence([0.99]);
+    expect(pickToyKind()).toBe('duck');
   });
 });

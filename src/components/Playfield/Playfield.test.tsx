@@ -37,7 +37,7 @@ describe('Playfield', () => {
   it('オブジェクトを描画する', () => {
     const game = playingState({
       objects: [
-        { id: 1, kind: 'chair', x: 100, y: 100, hit: false, scale: 1, vx: 0 },
+        { id: 1, kind: 'teddy', x: 100, y: 100, hit: false, scale: 1, vx: 0 },
       ],
     });
     const { container } = render(
@@ -54,7 +54,7 @@ describe('Playfield', () => {
   it('オブジェクトのコンテナに明示的な幅高さ(base×scale)が付く', () => {
     const game = playingState({
       objects: [
-        { id: 1, kind: 'chair', x: 100, y: 100, hit: false, scale: 1, vx: 0 },
+        { id: 1, kind: 'teddy', x: 100, y: 100, hit: false, scale: 1, vx: 0 },
       ],
     });
     const { container } = render(
@@ -66,7 +66,7 @@ describe('Playfield', () => {
       />,
     );
     const obj = container.querySelector<HTMLElement>('.obj');
-    // chair base=76, scale=1
+    // teddy base=76, scale=1
     expect(obj?.style.width).toBe('76px');
     expect(obj?.style.height).toBe('76px');
   });
@@ -104,7 +104,7 @@ describe('Playfield', () => {
   });
 
   it('接触中は頭上バーストを表示する', () => {
-    const game = playingState({ contact: { type: 'hurt', t: 0, dur: 0.6 } });
+    const game = playingState({ contact: { type: 'play', t: 0, dur: 0.6 } });
     const { getByText } = render(
       <Playfield
         game={game}
@@ -113,7 +113,7 @@ describe('Playfield', () => {
         bestDistance={0}
       />,
     );
-    expect(getByText('いたっ！')).toBeInTheDocument();
+    expect(getByText('わーい！')).toBeInTheDocument();
   });
 
   it('赤ちゃんを論理Y位置に配置する', () => {

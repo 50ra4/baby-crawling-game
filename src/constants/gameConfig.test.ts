@@ -48,14 +48,8 @@ describe('laneX', () => {
 });
 
 describe('OBJECT_META', () => {
-  it('6種類のオブジェクトが定義されている', () => {
-    expect(Object.keys(OBJECT_META)).toHaveLength(6);
-  });
-
-  it('椅子は障害物・静的・大サイズ(76)である', () => {
-    expect(OBJECT_META.chair.category).toBe('obstacle');
-    expect(OBJECT_META.chair.dynamic).toBe(false);
-    expect(OBJECT_META.chair.base).toBe(76);
+  it('5種類のオブジェクトが定義されている', () => {
+    expect(Object.keys(OBJECT_META)).toHaveLength(5);
   });
 
   it('ボールはおもちゃ・動的・中サイズ(54)である', () => {
@@ -86,8 +80,8 @@ describe('KINDS', () => {
     });
   });
 
-  it('障害物は椅子のみ、回復アイテムは哺乳瓶とオムツである', () => {
-    expect(KINDS.obstacle).toEqual(['chair']);
+  it('おもちゃは3種、回復アイテムは哺乳瓶とオムツである', () => {
+    expect(KINDS.toy).toEqual(['ball', 'teddy', 'duck']);
     expect(KINDS.item).toEqual(['bottle', 'diaper']);
   });
 });
@@ -98,17 +92,15 @@ describe('DEFAULT_CONFIG', () => {
     expect(DEFAULT_CONFIG.babyMoveSpeed).toBe(293);
   });
 
-  it('難易度がnormalプリセット(間隔0.75/障害物45/おもちゃ30/アイテム25)である', () => {
-    expect(DEFAULT_CONFIG.spawnInterval).toBe(0.75);
-    expect(DEFAULT_CONFIG.obstacleRate).toBe(45);
-    expect(DEFAULT_CONFIG.toyRate).toBe(30);
-    expect(DEFAULT_CONFIG.itemRate).toBe(25);
+  it('スポーン間隔がおもちゃ1.2/哺乳瓶4.5/オムツ7.0である', () => {
+    expect(DEFAULT_CONFIG.toyInterval).toBe(1.2);
+    expect(DEFAULT_CONFIG.bottleInterval).toBe(4.5);
+    expect(DEFAULT_CONFIG.diaperInterval).toBe(7.0);
   });
 
   it('パラメータ挙動が仕様通りである', () => {
     expect(DEFAULT_CONFIG.staminaStart).toBe(100);
-    expect(DEFAULT_CONFIG.obstacleDamage).toBe(10);
-    expect(DEFAULT_CONFIG.toyDamage).toBe(10);
+    expect(DEFAULT_CONFIG.toyDamage).toBe(8);
     expect(DEFAULT_CONFIG.bottleHealPct).toBe(20);
     expect(DEFAULT_CONFIG.discomfortThreshold).toBe(80);
     expect(DEFAULT_CONFIG.drainMultiplier).toBe(2);
@@ -116,9 +108,8 @@ describe('DEFAULT_CONFIG', () => {
     expect(DEFAULT_CONFIG.contactTime).toBe(0.6);
   });
 
-  it('アニメーション既定値(対角/点滅/跳ね)である', () => {
+  it('アニメーション既定値(対角/跳ね)である', () => {
     expect(DEFAULT_CONFIG.crawlStyle).toBe('diagonal');
-    expect(DEFAULT_CONFIG.hurtStyle).toBe('flash');
     expect(DEFAULT_CONFIG.playStyle).toBe('bounce');
   });
 

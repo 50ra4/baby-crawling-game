@@ -1,32 +1,19 @@
-import type { GameConfig, GameObject, ObjectCategory } from '../types/game';
+import type { GameConfig, GameObject, ObjectKind } from '../types/game';
 import { KINDS, LANES, OBJECT_META, laneX } from '../constants/gameConfig';
 
-// 出現比率の重みでカテゴリを抽選する
-const pickCategory = (config: GameConfig): ObjectCategory => {
-  const total = config.obstacleRate + config.toyRate + config.itemRate;
-  const roll = Math.random() * total;
-  if (roll < config.obstacleRate) {
-    return 'obstacle';
-  }
-  if (roll < config.obstacleRate + config.toyRate) {
-    return 'toy';
-  }
-  return 'item';
-};
-
-// カテゴリから具体的なkindを抽選する
-const pickKind = (category: ObjectCategory, config: GameConfig) => {
-  if (category === 'item') {
-    return Math.random() * 100 < config.bottleShare ? 'bottle' : 'diaper';
-  }
-  const list = KINDS[category];
+// おもちゃの具体的なkindを等確率で抽選する
+export const pickToyKind = (): ObjectKind => {
+  const list = KINDS.toy;
   return list.at(Math.floor(Math.random() * list.length))!;
 };
 
-// 1体のオブジェクトを生成する。idは呼び出し側が採番して渡す。
-export const spawnObject = (id: number, config: GameConfig): GameObject => {
-  const category = pickCategory(config);
-  const kind = pickKind(category, config);
+// 指定したkindのオブジェクトを1体生成する。idは呼び出し側が採番して渡す。
+// kindは決定論的に受け取り、レーンと動的初速のみ乱数で決める。
+export const spawnObject = (
+  id: number,
+  kind: ObjectKind,
+  config: GameConfig,
+): GameObject => {
   const lane = Math.floor(Math.random() * LANES);
 
   // 動的オブジェクトのみ斜め方向（±scrollSpeed×0.28〜0.58）の初速を持つ

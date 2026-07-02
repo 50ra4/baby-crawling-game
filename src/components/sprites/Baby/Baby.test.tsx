@@ -9,14 +9,8 @@ describe('Baby', () => {
     expect(img?.getAttribute('width')).toBe('120');
   });
 
-  it('被弾中は赤いグローのフィルターがかかる', () => {
-    const { container } = render(<Baby hurt />);
-    const img = container.querySelector('img');
-    expect(img?.style.filter).toContain('drop-shadow');
-  });
-
   it('通常時はフィルターがかからない', () => {
-    const { container } = render(<Baby hurt={false} />);
+    const { container } = render(<Baby />);
     const img = container.querySelector('img');
     expect(img?.style.filter).toBe('none');
   });
@@ -60,12 +54,6 @@ describe('Baby', () => {
     const { container } = render(<Baby mood={0.79} />);
     const img = container.querySelector('img');
     expect(img?.style.filter).toBe('none');
-  });
-
-  it('被弾は不快度より優先して赤いグローになる', () => {
-    const { container } = render(<Baby mood={1} hurt />);
-    const img = container.querySelector('img');
-    expect(img?.style.filter).toContain('drop-shadow(0 0 10px');
   });
 
   it('ドラッグ操作を奪わないようdraggable=falseかつpointer-events:noneになる', () => {
