@@ -22,8 +22,8 @@ export function Zzz({ t = 0, x = 0, y = 0 }: ZzzProps) {
             fontSize={fontSize}
             fill="#8b9bd4"
             opacity={opacity}
-            fontWeight="800"
-            fontFamily="'Baloo 2', sans-serif"
+            fontWeight="700"
+            fontFamily="'Fredoka', sans-serif"
             transform={`rotate(${12 + i * 5} ${xx} ${yy})`}
           >
             Z

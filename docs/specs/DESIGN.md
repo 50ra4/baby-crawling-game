@@ -7,20 +7,32 @@
 
 ## 1. デザイン方針
 
-絵本トーンの丸ゴシック＋淡い配色。ダークモードは採用しない。論理キャンバス 360×680px を
-ビューポートにスケールして表示し、角丸ステージ＋やわらかい影でまとめる。
+絵本トーンの丸ゴシック＋淡いピンク配色。ダークモードは採用しない。論理キャンバス 360×680px を
+ビューポートに等比スケールして表示する。ステージは角丸・浮き影を持たず画面いっぱいに配置する
+（全画面フィット）。スケール外の余白（レターボックス）はクリーム背景と一体化させ、浮きカードでは
+なく「一般的な Web アプリ」として見せる。
 
 ## 2. カラー
 
 ### 2.1 デザイントークン（`globals.css` `@theme`）
 
-| トークン             | 値        | 用途                                               |
-| -------------------- | --------- | -------------------------------------------------- |
-| `--color-ink`        | `#5a4a3a` | 本文・ラベルのダークブラウン                       |
-| `--color-title-pink` | `#ff7a9c` | タイトル・強調ピンク                               |
-| `--color-badge`      | `#e98aa6` | バッジ・見出しのライトピンク                       |
-| body 背景            | `#efe7dc` | 画面全体の温かいクリーム（放射グラデ重ね）         |
-| ステージ背景         | `#cfe`    | スケーリング枠の地色（通常は背景テーマで覆われる） |
+| トークン                | 値        | 用途                                               |
+| ----------------------- | --------- | -------------------------------------------------- |
+| `--color-ink`           | `#57473c` | 本文・ラベルのダークブラウン                       |
+| `--color-ink-soft`      | `#9c8a7d` | 副次ラベル・キャプションのミュートブラウン         |
+| `--color-primary`       | `#ff7a9c` | タイトル・強調・プライマリボタンのピンク           |
+| `--color-primary-light` | `#ff9fb8` | ボタン明色・グラデーション上部                     |
+| `--color-primary-deep`  | `#e15a7e` | ボタン影・3D プレス・フォーカスリング              |
+| `--color-border-pink`   | `#ffd8e2` | 入力枠・ボタン枠・ゴースト影                        |
+| `--color-badge`         | `#db7595` | バッジ・見出しのライトピンク                       |
+| `--color-cream`         | `#f6eee3` | 画面全体の背景基調（放射グラデ重ね）・body 背景    |
+| `--color-cream-deep`    | `#ecdfce` | 背景の陰影・帯の深み                               |
+| `--color-surface`       | `#ffffff` | カード・パネル・入力の白地                          |
+| `--color-surface-warm`  | `#fff8f2` | 温かみのあるパネル地                               |
+| ステージ背景            | `#cfe`    | スケーリング枠の地色（通常は背景テーマで覆われる） |
+
+角丸スケール（`@theme`）: `--radius-control: 16px`（ボタン・入力）/ `--radius-card: 20px`
+（パネル・統計カード）/ `--radius-pill: 999px`（ピル・ゲージトラック）。ステージは角丸なし。
 
 ### 2.2 ゲージ色（`gaugeColor.ts`）
 
@@ -48,9 +60,9 @@
 | タイトル背景       | `radial-gradient(circle at 50% 30%, rgba(255,250,245,.92), rgba(255,243,235,.96))`     |
 | ゲームオーバー背景 | `linear-gradient(rgba(40,44,90,.5), rgba(30,34,70,.62))` + `blur(3px)`                 |
 | あそびかた背景     | `rgba(40,44,90,.45)` + `blur(3px)`                                                     |
-| あそびかたパネル   | `#fff`、角丸 22px、`shadow 0 16px 40px rgba(40,44,90,.35)`                             |
-| ステージ枠         | 角丸 30px、`shadow 0 24px 70px rgba(120,90,60,.3), inset 0 4px 0 rgba(255,255,255,.6)` |
-| ゲージトラック     | `rgba(255,255,255,.7)`、`inset 0 1px 3px rgba(0,0,0,.12)`                              |
+| あそびかたパネル   | `#fff`、角丸 20px（`--radius-card`）、`shadow 0 16px 40px rgba(40,44,90,.32)`          |
+| ステージ枠         | 全画面フィット。角丸・浮き影なし（`overflow:hidden` のみ）                             |
+| ゲージトラック     | `rgba(255,255,255,.78)`、`inset 0 1px 2px rgba(87,71,60,.18), 0 1px 0 rgba(255,255,255,.5)` |
 
 ### 2.6 赤ちゃんフィルタ（`Baby.tsx`）
 
@@ -60,43 +72,50 @@
 ## 3. タイポグラフィ
 
 - 日本語: `'M PLUS Rounded 1c', system-ui, sans-serif`（`--font-jp`）
-- ラテン・数字・ロゴ: `'Baloo 2', 'M PLUS Rounded 1c', system-ui, sans-serif`（`--font-latin`）
+- ラテン・数字・ロゴ: `'Fredoka', 'M PLUS Rounded 1c', system-ui, sans-serif`（`--font-latin`）
+
+> Fredoka の最大ウェイトは 700。ラテン系の見出し・数字は 700 を最太とする（旧 Baloo 2 の 800 相当）。
+> 日本語（M PLUS Rounded 1c）は 800 まで利用可。
 
 | 要素                   | フォント          | サイズ / ウェイト                             |
 | ---------------------- | ----------------- | --------------------------------------------- |
-| タイトル見出し         | Baloo 2           | 42px / 800                                    |
-| バッジ                 | Baloo 2           | 12px / 700（uppercase, letter-spacing .15em） |
-| HUD 距離               | Baloo 2           | 30px / 800（単位 m は 14px）                  |
-| HUD ベスト             | Baloo 2           | 12px / 700                                    |
+| タイトル見出し         | Fredoka           | 40px / 700                                    |
+| バッジ                 | Fredoka           | 12px / 700（uppercase, letter-spacing .15em） |
+| HUD 距離               | Fredoka           | 30px / 700（単位 m は 14px）                  |
+| HUD ベスト             | Fredoka           | 12px / 700                                    |
 | ゲージアイコン         | —                 | 11px / 800                                    |
-| ゲージ警告             | Baloo 2           | 11px / 800（pulse）                           |
+| ゲージ警告             | Fredoka           | 11px / 700（pulse）                           |
 | 名前入力               | M PLUS Rounded 1c | 18px / 700                                    |
 | 名前ラベル             | —                 | 11px / 700                                    |
 | 性別ボタン             | M PLUS Rounded 1c | 15px / 700                                    |
-| はじめるボタン         | Baloo 2           | 20px / 800                                    |
+| はじめるボタン         | Fredoka           | 20px / 700                                    |
 | あそびかたリンク       | M PLUS Rounded 1c | 13px / 700（underline）                       |
-| ゲームオーバー見出し   | Baloo 2           | 30px / 800                                    |
+| ゲームオーバー見出し   | Fredoka           | 30px / 700                                    |
 | ゲームオーバー小見出し | —                 | 18px / 800                                    |
-| 統計値                 | Baloo 2           | 30px / 800（単位 14px）                       |
-| ポップテキスト         | Baloo 2           | 18px / 800                                    |
-| 接触バースト           | Baloo 2           | 32px / 800                                    |
+| 統計値                 | Fredoka           | 30px / 700（単位 14px）                       |
+| ポップテキスト         | Fredoka           | 18px / 700                                    |
+| 接触バースト           | Fredoka           | 32px / 700                                    |
 
 ## 4. コンポーネント
 
 ### ボタン
 
-- **Primary**（`.t-start`）: `linear-gradient(#ff9bb6, #ff7a9c)`、白文字、角丸 18px、`shadow 0 5px 0 #e35f81, 0 10px 16px rgba(227,95,129,.3)`。`:active` で `translateY(4px)` + `shadow 0 1px 0 #e35f81`（3D プレス）
-- **Ghost**（`.t-start.ghost`）: `#fff` 背景、`#ff7a9c` 文字、`shadow 0 5px 0 #ffd0dd`
+フラット・モダン方針：厚い 3D 影は用いず、ソリッド塗り＋やわらか影、押下で軽く沈む。
+
+- **Primary**（`.t-start`）: ソリッド `#ff7a9c`、白文字、角丸 16px（`--radius-control`）、`shadow 0 8px 20px rgba(225,90,126,.28)`。`:hover` で `#e15a7e`、`:active` で `translateY(1px) scale(.98)` + 影を弱める
+- **Ghost**（`.t-start.ghost`）: `#fff` 背景、`#e15a7e` 文字、border `2px solid #ffd8e2`、`shadow 0 8px 20px rgba(255,160,180,.2)`
 - ゲームオーバーのボタンは 17px / `padding 11px 26px`
+- フォーカス（`:focus-visible`）: `outline 3px solid #e15a7e`
 
 ### 名前入力（`.t-name`）
 
-- width 180px、padding 9px 12px、border `2.5px solid #ffd0dd`、角丸 14px、背景 `#fff`、focus で `border-color #ff9bb6`、最大 8 字
+- width 180px、padding 10px 12px、border `2px solid #ffd8e2`、角丸 16px（`--radius-control`）、背景 `#fff`、focus で `border-color #ff9fb8` ＋ `:focus-visible` で `ring 3px rgba(255,122,156,.5)`、最大 8 字
 
-### 性別ボタン（`.t-gender-btn`）
+### 性別ラジオ（`.t-gender-btn`）
 
-- pill 形（角丸 999px）、padding 7px 20px、border `2.5px solid #ffd0dd`
-- `.active`: `linear-gradient(#ff9bb6, #ff7a9c)` + 白文字 + `shadow 0 3px 0 #e35f81`、`aria-pressed` 連動
+- 選択マーク付きチップ（ラジオ）。pill 形（角丸 999px）、`::before` で 16px のラジオドットを描画、padding `9px 18px 9px 14px`、border `2px solid #ffd8e2`
+- `.active`: 文字 `#e15a7e`・背景 `#fff8f2`（surface-warm）・border `#ff9fb8`、ドットは `#ff7a9c` 塗り＋内側白リング（`inset 0 0 0 3px #fff`）で選択を明示。`aria-pressed` 連動
+- フォーカス（`:focus-visible`）: `outline 3px solid #e15a7e`
 
 ### ゲージ（`.gauge` / `Gauge.tsx`）
 
@@ -125,7 +144,7 @@
 
 ## 5. レイアウト
 
-- 論理キャンバス 360×680px（9:17）。スケール = `min(clientWidth/360, clientHeight/680)`、中央配置＋角丸 30px
+- 論理キャンバス 360×680px（9:17）。スケール = `min(clientWidth/360, clientHeight/680)`、中央配置。ステージは角丸なしの全画面フィット（外側の余白はクリーム背景と一体化）
 - 5 レーン: `laneX(i) = 48 + i × 66` → `[48, 114, 180, 246, 312]`（左右マージン 48px）
 - 赤ちゃん基準 Y = 680 × 0.7 = 476px、横幅 96px
 - フォーム: 名前入力 180px、性別ボタン gap 8px、はじめる `margin-top 16px / padding 13px 40px`
@@ -151,6 +170,11 @@
 | ZZZ                       | 3 個が上昇（−56px/周期）＋拡大（14→26px）＋フェード、回転 12°+i·5°、色 `#8b9bd4`    |
 
 > ハイハイ位相は `phase += crawlCyclesPerSec · (scrollSpeed/200) · dt`。既定 `crawlCyclesPerSec = 2.2`、`bounceHeight = 3.5`。
+
+### アクセシビリティ
+
+- **フォーカス可視化**: ボタン・入力・リンクは `:focus-visible` でリング/アウトラインを表示（キーボード操作時のみ）。
+- **モーション過敏**: `@media (prefers-reduced-motion: reduce)` で CSS 演出（ゲージ警告 pulse・接触 burst）を停止/即時化する。
 
 ## 7. 背景テーマ（`backgroundStyle.ts`）
 

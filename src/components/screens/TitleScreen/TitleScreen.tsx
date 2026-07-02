@@ -67,14 +67,14 @@ export function TitleScreen({
           />
         </div>
         <label
-          className="mb-[5px] text-[11px] font-bold tracking-[0.08em] text-[#a98]"
+          className="text-ink-soft mb-1.5 text-[11px] font-bold tracking-[0.08em]"
           htmlFor="baby-name"
         >
           あかちゃんの なまえ
         </label>
         <input
           id="baby-name"
-          className="border-border-pink font-jp text-ink focus:border-primary-light w-[180px] rounded-[14px] border-[2.5px] bg-white px-3 py-[9px] text-center text-[18px] font-bold outline-none"
+          className="border-border-pink font-jp text-ink focus:border-primary-light bg-surface rounded-control focus-visible:ring-primary/50 w-[180px] border-2 px-3 py-2.5 text-center text-[18px] font-bold outline-none focus-visible:ring-[3px]"
           value={name}
           maxLength={NAME_MAX_LENGTH}
           onChange={handleChange}
@@ -103,16 +103,16 @@ export function TitleScreen({
         </button>
         <button
           type="button"
-          className="font-jp text-badge mt-3 cursor-pointer border-0 bg-transparent text-[13px] font-bold underline underline-offset-[3px]"
+          className="font-jp text-badge focus-visible:ring-badge/50 mt-3 cursor-pointer rounded border-0 bg-transparent text-[13px] font-bold underline underline-offset-[3px] focus-visible:ring-2"
           onClick={help.open}
         >
           あそびかたを みる
         </button>
-        <div className="mt-4 text-[12px] font-bold text-[#b09] opacity-[0.55]">
+        <div className="text-ink-soft mt-4 text-[12px] font-bold opacity-80">
           ← → / A D で よけてね ・ ドラッグでも うごくよ
         </div>
         {bestDistance > 0 && (
-          <div className="font-latin text-badge mt-2 text-[14px] font-extrabold">
+          <div className="font-latin text-badge mt-2 text-[14px] font-bold">
             ベスト {bestDistance}m
           </div>
         )}
