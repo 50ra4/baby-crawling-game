@@ -1,7 +1,5 @@
 import type { CrawlStyle } from '../../../types/game';
-import babyCrawlImg from '../../../assets/sprites/baby-crawl.png';
-import babyPlayImg from '../../../assets/sprites/baby-play.png';
-import babyTitleImg from '../../../assets/sprites/baby-title.png';
+import { SPRITE_SOURCES } from '../../../assets/sprites/spriteSources';
 
 const TAU = Math.PI * 2;
 
@@ -17,12 +15,12 @@ const moodFilter = (worried: boolean): string =>
 
 const babySrc = (variant: 'game' | 'title', play: boolean): string => {
   if (variant === 'title') {
-    return babyTitleImg;
+    return SPRITE_SOURCES.babyTitle;
   }
   if (play) {
-    return babyPlayImg;
+    return SPRITE_SOURCES.babyPlay;
   }
-  return babyCrawlImg;
+  return SPRITE_SOURCES.babyCrawl;
 };
 
 type BabyProps = {

@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import bottleImg from '../../../assets/sprites/bottle.png';
+import { SPRITE_SOURCES } from '../../../assets/sprites/spriteSources';
 
 type BottleProps = {
   size?: number;
@@ -8,7 +8,7 @@ type BottleProps = {
 export function Bottle({ size = 52 }: BottleProps) {
   return (
     <img
-      src={bottleImg}
+      src={SPRITE_SOURCES.bottle}
       alt=""
       draggable={false}
       width={size}

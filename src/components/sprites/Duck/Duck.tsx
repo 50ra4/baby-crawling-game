@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import duckImg from '../../../assets/sprites/duck.png';
+import { SPRITE_SOURCES } from '../../../assets/sprites/spriteSources';
 
 type DuckProps = {
   size?: number;
@@ -8,7 +8,7 @@ type DuckProps = {
 export function Duck({ size = 52 }: DuckProps) {
   return (
     <img
-      src={duckImg}
+      src={SPRITE_SOURCES.duck}
       alt=""
       draggable={false}
       width={size}

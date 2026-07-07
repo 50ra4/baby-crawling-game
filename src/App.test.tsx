@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, vi } from 'vitest';
 import { App } from './App';
 
@@ -41,12 +41,26 @@ class FakeAudioContext {
   }
 }
 
+// jsdomはimg.src代入でonload/onerrorを発火しないため、Imageをスタブして
+// マイクロタスクで遅延発火するフェイクローダーを用意する（代入順に依存しない）。
+class FakeImage {
+  onload: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+
+  set src(_value: string) {
+    void Promise.resolve().then(() => {
+      this.onload?.();
+    });
+  }
+}
+
 beforeEach(() => {
   localStorage.clear();
   // ゲームループは遷移検証に不要なので rAF を無効化する
   vi.spyOn(globalThis, 'requestAnimationFrame').mockReturnValue(0);
   vi.spyOn(globalThis, 'cancelAnimationFrame').mockImplementation(() => {});
   vi.stubGlobal('AudioContext', FakeAudioContext);
+  vi.stubGlobal('Image', FakeImage);
 });
 
 afterEach(() => {
@@ -60,9 +74,11 @@ describe('App', () => {
     expect(getByText(/はいはい/)).toBeInTheDocument();
   });
 
-  it('「はじめる」でゲーム画面（HUD表示）に遷移する', () => {
+  it('「はじめる」でゲーム画面（HUD表示）に遷移する', async () => {
     const { getByText, container } = render(<App />);
     expect(container.querySelector('.hud')).toBeNull();
+    // 画像プリロード完了まで「はじめる」はdisabledのため、活性化を待つ
+    await waitFor(() => expect(getByText('はじめる')).not.toBeDisabled());
     fireEvent.click(getByText('はじめる'));
     expect(container.querySelector('.hud')).not.toBeNull();
   });

@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import ballImg from '../../../assets/sprites/ball.png';
+import { SPRITE_SOURCES } from '../../../assets/sprites/spriteSources';
 
 type BallProps = {
   size?: number;
@@ -8,7 +8,7 @@ type BallProps = {
 export function Ball({ size = 52 }: BallProps) {
   return (
     <img
-      src={ballImg}
+      src={SPRITE_SOURCES.ball}
       alt=""
       draggable={false}
       width={size}
