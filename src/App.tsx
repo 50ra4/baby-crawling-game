@@ -20,10 +20,12 @@ import { displayName as resolveName } from './utils/displayName';
 import { gameAudio } from './audio/gameAudio';
 import { useInput } from './hooks/useInput';
 import { useGameLoop } from './hooks/useGameLoop';
+import { useImagePreload } from './hooks/useImagePreload';
 import { Stage } from './components/Stage/Stage';
 import { Playfield } from './components/Playfield/Playfield';
 import { TitleScreen } from './components/screens/TitleScreen/TitleScreen';
 import { GameOverScreen } from './components/screens/GameOverScreen/GameOverScreen';
+import { SPRITE_IMAGE_URLS } from './assets/sprites/spriteImages';
 
 const GAME_OVER_DELAY_MS = 350;
 
@@ -36,6 +38,7 @@ const createInitialConfig = (): GameConfig => ({
 export function App() {
   const [config, setConfig] = useState<GameConfig>(createInitialConfig);
   const [screen, setScreen] = useState<GameScreen>('title');
+  const assetsReady = useImagePreload(SPRITE_IMAGE_URLS);
 
   const gameRef = useRef<GameState>(createGameState(config));
   const bestRef = useRef(loadBest());
@@ -53,11 +56,14 @@ export function App() {
   }, [screen, config.bgmOn]);
 
   const start = useCallback(() => {
+    if (!assetsReady) {
+      return;
+    }
     gameAudio.init();
     gameAudio.sfx('start');
     gameRef.current = createGameState(config);
     setScreen('playing');
-  }, [config]);
+  }, [config, assetsReady]);
 
   const toTitle = useCallback(() => {
     gameAudio.setBgm(false);
@@ -66,6 +72,9 @@ export function App() {
   }, [config]);
 
   const handleConfirm = useCallback(() => {
+    if (!assetsReady) {
+      return;
+    }
     setScreen((current) => {
       if (current === 'title' || current === 'over') {
         gameAudio.init();
@@ -75,7 +84,7 @@ export function App() {
       }
       return current;
     });
-  }, [config]);
+  }, [config, assetsReady]);
 
   const handleEvents = useCallback((events: GameEvent[]) => {
     for (const event of events) {
@@ -136,6 +145,7 @@ export function App() {
             onChangeName={handleChangeName}
             onChangeGender={handleChangeGender}
             onStart={start}
+            canStart={assetsReady}
           />
         )}
         {screen === 'over' && (

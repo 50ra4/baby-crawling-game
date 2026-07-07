@@ -18,6 +18,7 @@ type TitleScreenProps = {
   onChangeName: (name: string) => void;
   onChangeGender: (gender: Gender) => void;
   onStart: () => void;
+  canStart: boolean;
 };
 
 // タイトル画面：ロゴ＋ハイハイプレビュー＋名前入力＋性別＋はじめる
@@ -29,6 +30,7 @@ export function TitleScreen({
   onChangeName,
   onChangeGender,
   onStart,
+  canStart,
 }: TitleScreenProps) {
   const time = useRafTime();
   const phase = (time * PREVIEW_CRAWL_SPEED) % 1;
@@ -98,8 +100,8 @@ export function TitleScreen({
             女の子
           </button>
         </div>
-        <button className="t-start" onClick={onStart}>
-          はじめる
+        <button className="t-start" onClick={onStart} disabled={!canStart}>
+          {canStart ? 'はじめる' : 'よみこみ中…'}
         </button>
         <button
           type="button"

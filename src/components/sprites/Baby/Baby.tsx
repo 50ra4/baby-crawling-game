@@ -1,7 +1,9 @@
 import type { CrawlStyle } from '../../../types/game';
-import babyCrawlImg from '../../../assets/sprites/baby-crawl.png';
-import babyPlayImg from '../../../assets/sprites/baby-play.png';
-import babyTitleImg from '../../../assets/sprites/baby-title.png';
+import {
+  babyCrawlImg,
+  babyPlayImg,
+  babyTitleImg,
+} from '../../../assets/sprites/spriteImages';
 
 const TAU = Math.PI * 2;
 

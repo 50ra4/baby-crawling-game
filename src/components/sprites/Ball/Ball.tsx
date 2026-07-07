@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import ballImg from '../../../assets/sprites/ball.png';
+import { ballImg } from '../../../assets/sprites/spriteImages';
 
 type BallProps = {
   size?: number;

@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import diaperImg from '../../../assets/sprites/diaper.png';
+import { diaperImg } from '../../../assets/sprites/spriteImages';
 
 type DiaperProps = {
   size?: number;

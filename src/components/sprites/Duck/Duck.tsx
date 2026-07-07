@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import duckImg from '../../../assets/sprites/duck.png';
+import { duckImg } from '../../../assets/sprites/spriteImages';
 
 type DuckProps = {
   size?: number;

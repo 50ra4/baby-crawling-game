@@ -10,6 +10,7 @@ const baseProps = {
   onChangeName: () => {},
   onChangeGender: () => {},
   onStart: () => {},
+  canStart: true,
 };
 
 describe('TitleScreen', () => {
@@ -118,5 +119,13 @@ describe('TitleScreen', () => {
     const { getByText } = render(<TitleScreen {...baseProps} />);
     fireEvent.click(getByText('あそびかたを みる'));
     expect(document.activeElement).toBe(getByText('とじる'));
+  });
+
+  it('canStartがfalseのとき「よみこみ中…」表示でボタンが無効になる', () => {
+    const { getByText } = render(
+      <TitleScreen {...baseProps} canStart={false} />,
+    );
+    const startBtn = getByText('よみこみ中…') as HTMLButtonElement;
+    expect(startBtn.disabled).toBe(true);
   });
 });

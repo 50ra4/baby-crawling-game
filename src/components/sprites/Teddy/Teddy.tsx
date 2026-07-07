@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import teddyImg from '../../../assets/sprites/teddy.png';
+import { teddyImg } from '../../../assets/sprites/spriteImages';
 
 type TeddyProps = {
   size?: number;

@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import babySleepImg from '../../../assets/sprites/baby-sleep.png';
+import { babySleepImg } from '../../../assets/sprites/spriteImages';
 
 type SleepingBabyProps = {
   size?: number;
