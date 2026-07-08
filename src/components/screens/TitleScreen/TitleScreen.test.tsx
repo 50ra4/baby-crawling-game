@@ -10,6 +10,7 @@ const baseProps = {
   onChangeName: () => {},
   onChangeGender: () => {},
   onStart: () => {},
+  ready: true,
 };
 
 describe('TitleScreen', () => {
@@ -118,5 +119,31 @@ describe('TitleScreen', () => {
     const { getByText } = render(<TitleScreen {...baseProps} />);
     fireEvent.click(getByText('あそびかたを みる'));
     expect(document.activeElement).toBe(getByText('とじる'));
+  });
+
+  it('ready=falseのとき「はじめる」ボタンがdisabledになる', () => {
+    const { getByText } = render(
+      <TitleScreen {...baseProps} ready={false} />,
+    );
+    expect(getByText('はじめる')).toBeDisabled();
+  });
+
+  it('ready=trueのとき「はじめる」ボタンが活性になる', () => {
+    const { getByText } = render(<TitleScreen {...baseProps} ready={true} />);
+    expect(getByText('はじめる')).not.toBeDisabled();
+  });
+
+  it('ready=falseのとき「よみこみちゅう…」を表示する', () => {
+    const { getByText } = render(
+      <TitleScreen {...baseProps} ready={false} />,
+    );
+    expect(getByText('よみこみちゅう…')).toBeInTheDocument();
+  });
+
+  it('ready=trueのとき「よみこみちゅう…」を表示しない', () => {
+    const { queryByText } = render(
+      <TitleScreen {...baseProps} ready={true} />,
+    );
+    expect(queryByText('よみこみちゅう…')).toBeNull();
   });
 });

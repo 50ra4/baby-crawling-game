@@ -18,6 +18,7 @@ type TitleScreenProps = {
   onChangeName: (name: string) => void;
   onChangeGender: (gender: Gender) => void;
   onStart: () => void;
+  ready: boolean;
 };
 
 // タイトル画面：ロゴ＋ハイハイプレビュー＋名前入力＋性別＋はじめる
@@ -29,6 +30,7 @@ export function TitleScreen({
   onChangeName,
   onChangeGender,
   onStart,
+  ready,
 }: TitleScreenProps) {
   const time = useRafTime();
   const phase = (time * PREVIEW_CRAWL_SPEED) % 1;
@@ -98,9 +100,18 @@ export function TitleScreen({
             女の子
           </button>
         </div>
-        <button className="t-start" onClick={onStart}>
+        <button
+          className="t-start disabled:cursor-not-allowed disabled:opacity-60"
+          onClick={onStart}
+          disabled={!ready}
+        >
           はじめる
         </button>
+        {!ready && (
+          <div className="text-ink-soft mt-2 text-[12px] font-bold">
+            よみこみちゅう…
+          </div>
+        )}
         <button
           type="button"
           className="font-jp text-badge focus-visible:ring-badge/50 mt-3 cursor-pointer rounded border-0 bg-transparent text-[13px] font-bold underline underline-offset-[3px] focus-visible:ring-2"

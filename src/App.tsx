@@ -20,6 +20,7 @@ import { displayName as resolveName } from './utils/displayName';
 import { gameAudio } from './audio/gameAudio';
 import { useInput } from './hooks/useInput';
 import { useGameLoop } from './hooks/useGameLoop';
+import { useImagePreload } from './hooks/useImagePreload';
 import { Stage } from './components/Stage/Stage';
 import { Playfield } from './components/Playfield/Playfield';
 import { TitleScreen } from './components/screens/TitleScreen/TitleScreen';
@@ -41,6 +42,7 @@ export function App() {
   const bestRef = useRef(loadBest());
   const lastResultRef = useRef(0);
   const stageRef = useRef<HTMLDivElement>(null);
+  const preloadStatus = useImagePreload();
 
   // 効果音のON/OFFを同期（外部のオーディオ状態との同期）
   useEffect(() => {
@@ -53,11 +55,15 @@ export function App() {
   }, [screen, config.bgmOn]);
 
   const start = useCallback(() => {
+    // 画像プリロード完了前は開始させない
+    if (preloadStatus !== 'ready') {
+      return;
+    }
     gameAudio.init();
     gameAudio.sfx('start');
     gameRef.current = createGameState(config);
     setScreen('playing');
-  }, [config]);
+  }, [config, preloadStatus]);
 
   const toTitle = useCallback(() => {
     gameAudio.setBgm(false);
@@ -68,6 +74,10 @@ export function App() {
   const handleConfirm = useCallback(() => {
     setScreen((current) => {
       if (current === 'title' || current === 'over') {
+        // 画像プリロード完了前は遷移させない（Space/Enterによる開始もブロック）
+        if (preloadStatus !== 'ready') {
+          return current;
+        }
         gameAudio.init();
         gameAudio.sfx('start');
         gameRef.current = createGameState(config);
@@ -75,7 +85,7 @@ export function App() {
       }
       return current;
     });
-  }, [config]);
+  }, [config, preloadStatus]);
 
   const handleEvents = useCallback((events: GameEvent[]) => {
     for (const event of events) {
@@ -136,6 +146,7 @@ export function App() {
             onChangeName={handleChangeName}
             onChangeGender={handleChangeGender}
             onStart={start}
+            ready={preloadStatus === 'ready'}
           />
         )}
         {screen === 'over' && (

@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import babySleepImg from '../../../assets/sprites/baby-sleep.png';
+import { SPRITE_SOURCES } from '../../../assets/sprites/spriteSources';
 
 type SleepingBabyProps = {
   size?: number;
@@ -14,7 +14,7 @@ export function SleepingBaby({
 
   return (
     <img
-      src={babySleepImg}
+      src={SPRITE_SOURCES.babySleep}
       alt=""
       draggable={false}
       width={size}

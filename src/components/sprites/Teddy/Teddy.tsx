@@ -1,5 +1,5 @@
 import { IMG_SPRITE_STYLE } from '../spriteStyle';
-import teddyImg from '../../../assets/sprites/teddy.png';
+import { SPRITE_SOURCES } from '../../../assets/sprites/spriteSources';
 
 type TeddyProps = {
   size?: number;
@@ -8,7 +8,7 @@ type TeddyProps = {
 export function Teddy({ size = 56 }: TeddyProps) {
   return (
     <img
-      src={teddyImg}
+      src={SPRITE_SOURCES.teddy}
       alt=""
       draggable={false}
       width={size}
